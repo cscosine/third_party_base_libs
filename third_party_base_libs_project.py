@@ -7,8 +7,14 @@ from csorchestrator.application.cli.cli import orchestrator_main_with_default_ru
 from csorchestrator.application.factory.factory import (
     OptionalOrchestratorWithReport,
 )
-from csorchestrator.application.recipes.checkout_build import checkout_build_and_archive_repos
-from csorchestrator.application.recipes.create_orchestrator import create_default_orchestrator
+from csorchestrator.application.recipes.create_orchestrator import (
+    create_default_orchestrator_and_default_checkout_build_upload,
+)
+from csorchestrator.application.recipes.repos_config import (
+    PublishPackageMode,
+    RepoRefBuildPublishConfig,
+    RepoRefBuildPublishConfigDict,
+)
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
@@ -27,36 +33,33 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
 
-    repos: dict[str, tuple[str, BuildConfig | None]] = {
-        "csCMake": (common_repo_ref, None),
-        "eigen3": (common_repo_ref, BuildConfig.RELEASE),
-        "fmt": (common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "fmt-eigen": (common_repo_ref, BuildConfig.RELEASE),
-        "cpptrace": (common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "magic_enum": (common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "libassert": (common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "tclap": (common_repo_ref, BuildConfig.RELEASE),
-        "Catch2": (common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "pipes": (common_repo_ref, BuildConfig.RELEASE),
-        "NamedType": (common_repo_ref, BuildConfig.RELEASE),
-        "tl-optional": (common_repo_ref, BuildConfig.RELEASE),
-        "tl-expected": (common_repo_ref, BuildConfig.RELEASE),
+    repos: RepoRefBuildPublishConfigDict = {
+        "csCMake": RepoRefBuildPublishConfig(common_repo_ref, None),
+        "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "fmt": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "fmt-eigen": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "cpptrace": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "magic_enum": RepoRefBuildPublishConfig(
+            common_repo_ref, BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
+        "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "pipes": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
-    o = create_default_orchestrator(
+    o = create_default_orchestrator_and_default_checkout_build_upload(
         name=THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
         version=THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
+        base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
+        repo_ref_build_publish_config_dict=repos,
         additional_files_list=[
             Path("third_party_base_libs") / Path("csorchestrator_config.py"),
         ],
-    )
-
-    checkout_build_and_archive_repos(
-        o,
-        base_target_dir=base_target_dir,
-        base_install_dir=base_install_dir,
-        repo_ref_build_type_list=repos,
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
     )
 
