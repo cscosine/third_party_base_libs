@@ -74,12 +74,14 @@ jobs:
         name: manifest.csOrchestratorManifest
         path: |-
           artifacts/**/*.csOrchestratorManifest
+        overwrite: true
     - name: Upload additional file third_party_base_libs-0.1.0-bundle.tar.gz as artifact
       uses: actions/upload-artifact@v7
       with:
         name: third_party_base_libs-0.1.0-bundle.tar.gz
         path: |-
           artifacts/third_party_base_libs-0.1.0-bundle.tar.gz
+        overwrite: true
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v3
       with:
@@ -586,3 +588,4 @@ jobs:
         path: |-
           workspace/install/*.tar.gz
           workspace/install/*.csOrchestratorManifest
+        overwrite: true
