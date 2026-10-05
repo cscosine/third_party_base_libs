@@ -45,7 +45,7 @@ jobs:
         project_name = 'third_party_base_libs'
         project_version = '0.1.0'
         base_path_additional_files = Path(os.environ["GITHUB_WORKSPACE"])
-        list_additional_files = [Path('third_party_base_libs/csorchestrator_config.py')]
+        list_additional_files = [Path('third_party_base_libs_config.py')]
         output_folder_additional_files = Path('generated-for-release')
         output_bundle_file_name = Path('third_party_base_libs-0.1.0-bundle.tar.gz')
 

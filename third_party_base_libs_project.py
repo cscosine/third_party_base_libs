@@ -20,7 +20,7 @@ from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
 )
 
-from third_party_base_libs.csorchestrator_config import (
+from third_party_base_libs_config import (
     THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
     THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
 )
@@ -60,7 +60,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         base_install_dir=base_install_dir,
         repo_ref_build_publish_config_dict=repos,
         additional_files_list=[
-            Path("third_party_base_libs") / Path("csorchestrator_config.py"),
+            Path("third_party_base_libs_config.py"),
         ],
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
     )
