@@ -11,7 +11,6 @@ from csorchestrator.application.recipes.create_orchestrator import (
     create_default_orchestrator_and_default_checkout_build_upload,
 )
 from csorchestrator.application.recipes.repos_config import (
-    PublishPackageMode,
     RepoRefBuildPublishConfig,
     RepoRefBuildPublishConfigDict,
 )
@@ -19,6 +18,7 @@ from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
 )
+from csorchestrator.portable.release_manifest import PublishPackageMode
 
 from third_party_base_libs_config import (
     THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
@@ -36,21 +36,19 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     repos: RepoRefBuildPublishConfigDict = {
         "csCMake": RepoRefBuildPublishConfig(common_repo_ref, None),
         "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # ruff: noqa: E501
-        # "fmt": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        # "fmt-eigen": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # "cpptrace": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        # "magic_enum": RepoRefBuildPublishConfig(
-        #     common_repo_ref, BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
-        # ),
-        # "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        # "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        # "pipes": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        # ruff: noqa
+        "fmt": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "fmt-eigen": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "cpptrace": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "magic_enum": RepoRefBuildPublishConfig(
+            common_repo_ref, BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
+        "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "pipes": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
     o = create_default_orchestrator_and_default_checkout_build_upload(
