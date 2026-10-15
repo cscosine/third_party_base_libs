@@ -20,11 +20,6 @@ from csorchestrator.frontend.cscmake_presets.supported_variants import (
 )
 from csorchestrator.portable.release_manifest import PublishPackageMode
 
-from third_party_base_libs_config import (
-    THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
-    THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
-)
-
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -51,15 +46,22 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
+    dependencies: dict[str, set[str]] = {
+        "fmt-eigen": {"eigen3", "fmt"},
+        "libassert": {"cpptrace"},
+    }
+
     o = create_default_orchestrator_and_default_checkout_build_upload(
-        name=THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
-        version=THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
+        name="third_party_base_libs",
+        version="0.1.0",
         base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
         repo_ref_build_publish_config_dict=repos,
         additional_files_list=[
             Path("third_party_base_libs_config.py"),
         ],
+        repo_dependencies_dict=dependencies,
+        repo_dependencies_dev_dict={},
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
     )
 

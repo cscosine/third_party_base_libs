@@ -51,8 +51,10 @@ jobs:
         list_additional_files = [Path('third_party_base_libs_config.py')]
         output_folder_additional_files = Path('generated-for-release')
         output_bundle_file_name = Path('third_party_base_libs-0.1.0-bundle.tar.gz')
-        repo_publish_config_dict = {'csCMake': PublishPackageMode.ON_VARIANT, 'eigen3': PublishPackageMode.HEADERS_ONLY, 'fmt': PublishPackageMode.ON_VARIANT, 'fmt-eigen': PublishPackageMode.HEADERS_ONLY, 'cpptrace': PublishPackageMode.ON_VARIANT, 'magic_enum': PublishPackageMode.HEADERS_ONLY, 'libassert': PublishPackageMode.ON_VARIANT, 'tclap': PublishPackageMode.HEADERS_ONLY, 'Catch2': PublishPackageMode.ON_VARIANT, 'pipes': PublishPackageMode.HEADERS_ONLY, 'NamedType': PublishPackageMode.HEADERS_ONLY, 'tl-optional': PublishPackageMode.HEADERS_ONLY, 'tl-expected': PublishPackageMode.HEADERS_ONLY}
+        repo_publish_config_dict = {'eigen3': PublishPackageMode.HEADERS_ONLY, 'fmt': PublishPackageMode.ON_VARIANT, 'fmt-eigen': PublishPackageMode.HEADERS_ONLY, 'cpptrace': PublishPackageMode.ON_VARIANT, 'magic_enum': PublishPackageMode.HEADERS_ONLY, 'libassert': PublishPackageMode.ON_VARIANT, 'tclap': PublishPackageMode.HEADERS_ONLY, 'Catch2': PublishPackageMode.ON_VARIANT, 'pipes': PublishPackageMode.HEADERS_ONLY, 'NamedType': PublishPackageMode.HEADERS_ONLY, 'tl-optional': PublishPackageMode.HEADERS_ONLY, 'tl-expected': PublishPackageMode.HEADERS_ONLY}
         header_only_variants_sources = {'csv1-linux': 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig', 'csv1-windows': 'csv1-windows-v10-x64-generic-msvc-default-msvc2022'}
+        dependencies = {'fmt-eigen': {'eigen3', 'fmt'}, 'libassert': {'cpptrace'}}
+        dependencies_dev = {}
 
         errors_list = collect_release_manifest_single_variant_and_prepare_manifest(
             input_folder_base=input_folder_base,
@@ -67,6 +69,8 @@ jobs:
             repo_publish_config_dict=repo_publish_config_dict,
             header_only_variants_sources=header_only_variants_sources,
             archive_files_are_in_context_based_folder=True,
+            dependencies=dependencies,
+            dependencies_dev=dependencies_dev,
         )
 
         if len(errors_list) > 0:
