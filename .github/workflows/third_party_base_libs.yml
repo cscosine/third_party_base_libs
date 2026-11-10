@@ -4,7 +4,6 @@ name: third_party_base_libs
     branches:
     - main
     - dev
-    - feature/productize
     tags:
     - v*.*.*
   pull_request:
@@ -268,7 +267,7 @@ jobs:
       with:
         repository: cscosine/csCMake.git
         path: workspace/csCMake
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: eigen3 Git clone/pull-ff
@@ -276,7 +275,7 @@ jobs:
       with:
         repository: cscosine/eigen3.git
         path: workspace/eigen3
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: fmt Git clone/pull-ff
@@ -284,7 +283,7 @@ jobs:
       with:
         repository: cscosine/fmt.git
         path: workspace/fmt
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: fmt-eigen Git clone/pull-ff
@@ -292,7 +291,7 @@ jobs:
       with:
         repository: cscosine/fmt-eigen.git
         path: workspace/fmt-eigen
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: cpptrace Git clone/pull-ff
@@ -300,7 +299,7 @@ jobs:
       with:
         repository: cscosine/cpptrace.git
         path: workspace/cpptrace
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: magic_enum Git clone/pull-ff
@@ -308,7 +307,7 @@ jobs:
       with:
         repository: cscosine/magic_enum.git
         path: workspace/magic_enum
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: libassert Git clone/pull-ff
@@ -316,7 +315,7 @@ jobs:
       with:
         repository: cscosine/libassert.git
         path: workspace/libassert
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tclap Git clone/pull-ff
@@ -324,7 +323,7 @@ jobs:
       with:
         repository: cscosine/tclap.git
         path: workspace/tclap
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: Catch2 Git clone/pull-ff
@@ -332,7 +331,7 @@ jobs:
       with:
         repository: cscosine/Catch2.git
         path: workspace/Catch2
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: pipes Git clone/pull-ff
@@ -340,7 +339,7 @@ jobs:
       with:
         repository: cscosine/pipes.git
         path: workspace/pipes
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: NamedType Git clone/pull-ff
@@ -348,7 +347,7 @@ jobs:
       with:
         repository: cscosine/NamedType.git
         path: workspace/NamedType
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tl-optional Git clone/pull-ff
@@ -356,7 +355,7 @@ jobs:
       with:
         repository: cscosine/tl-optional.git
         path: workspace/tl-optional
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tl-expected Git clone/pull-ff
@@ -364,7 +363,7 @@ jobs:
       with:
         repository: cscosine/tl-expected.git
         path: workspace/tl-expected
-        ref: feature/productize
+        ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: cmake workflow on eigen3 CMake Workflow for config(s) release

@@ -26,7 +26,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
-    common_repo_ref = "feature/productize"
+    common_repo_ref = "dev"
 
     repos: RepoRefBuildPublishConfigDict = {
         "csCMake": RepoRefBuildPublishConfig(common_repo_ref, None),
@@ -63,8 +63,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         repo_dependencies_dict=dependencies,
         repo_dependencies_dev_dict={},
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
-        # feature/productize: CI on the csCMake productize migration; remove when merged into dev
-        on_push_branches=["main", "dev", "feature/productize"],
     )
 
     return OptionalOrchestratorWithReport.create_result_and_report(o, report)
