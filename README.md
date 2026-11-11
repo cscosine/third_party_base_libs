@@ -92,6 +92,7 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 1. **Repos Self Checkout & Update**:
    - Performs a shallow (`depth=1`) self-checkout of this repository so release assembly runs on the runner.
+   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc1`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
 2. **Checkout & Build each library**: for every repository configured in [`third_party_base_libs_project.py`](third_party_base_libs_project.py):
    - Clones or pulls the repository into `workspace/<repo>` at the configured ref (usually `dev`).
    - Configures, builds, and installs the library into `workspace/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
@@ -106,7 +107,6 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 | Repository | BuildConfig |
 |---|---|
-| csCMake | `None` (checked out, not built) |
 | eigen3 | `RELEASE` |
 | fmt | `DEBUG_RELEASE` |
 | fmt-eigen | `RELEASE` |
@@ -189,7 +189,7 @@ graph TD
 **Notes:**
 
 - **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `pipes`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
-- **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is checked out but not built, and it is **not** a runtime / install-time dependency of any installed library.
+- **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `workspace/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
 - **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`workspace/libassert/include/libassert/stringification.hpp`](workspace/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
 - `cpptrace` statically bundles `zstd` and `libdwarf` (via `FetchContent`) for stacktrace symbolization — visible as `libzstd.a` / `libdwarf.a` in its install output; these are *not* separate entries in the recipe.
 - Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `pipes`, `NamedType`, `tl-optional`, `tl-expected`.

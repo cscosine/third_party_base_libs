@@ -10,6 +10,7 @@ from csorchestrator.application.factory.factory import (
 from csorchestrator.application.recipes.create_orchestrator import (
     create_default_orchestrator_and_default_checkout_build_upload,
 )
+from csorchestrator.application.recipes.cscmake_release import create_cscmake_release_archive
 from csorchestrator.application.recipes.repos_config import (
     RepoRefBuildPublishConfig,
     RepoRefBuildPublishConfigDict,
@@ -27,9 +28,9 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
+    cscmake_version = "1.0.0-rc1"
 
     repos: RepoRefBuildPublishConfigDict = {
-        "csCMake": RepoRefBuildPublishConfig(common_repo_ref, None),
         "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "fmt": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
         "fmt-eigen": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
@@ -63,6 +64,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         repo_dependencies_dict=dependencies,
         repo_dependencies_dev_dict={},
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
+        release_archive_list=[create_cscmake_release_archive(cscmake_version)],
     )
 
     return OptionalOrchestratorWithReport.create_result_and_report(o, report)
