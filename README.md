@@ -105,20 +105,23 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 ### Included Libraries
 
-| Repository | BuildConfig |
-|---|---|
-| eigen3 | `RELEASE` |
-| fmt | `DEBUG_RELEASE` |
-| fmt-eigen | `RELEASE` |
-| cpptrace | `DEBUG_RELEASE` |
-| magic_enum | `DEBUG_RELEASE` |
-| libassert | `DEBUG_RELEASE` |
-| tclap | `RELEASE` |
-| Catch2 | `DEBUG_RELEASE` |
-| pipes | `RELEASE` |
-| NamedType | `RELEASE` |
-| tl-optional | `RELEASE` |
-| tl-expected | `RELEASE` |
+Each library is a fork on `cscosine/<repo>` (`dev`: an upstream release + our commits, the csCMake integration and
+compiler fixes); the version is the one of its installed CMake package.
+
+| Repository | Version | Upstream | BuildConfig |
+|---|---|---|---|
+| eigen3 | 5.0.1 | [libeigen/eigen](https://gitlab.com/libeigen/eigen) | `RELEASE` |
+| fmt | 12.2.1 | [fmtlib/fmt](https://github.com/fmtlib/fmt) | `DEBUG_RELEASE` |
+| fmt-eigen | 1.0.0 | (no releases; author Yunfan REN) | `RELEASE` |
+| cpptrace | 1.0.4 | [jeremy-rifkin/cpptrace](https://github.com/jeremy-rifkin/cpptrace) | `DEBUG_RELEASE` |
+| magic_enum | 0.9.8 | [Neargye/magic_enum](https://github.com/Neargye/magic_enum) | `DEBUG_RELEASE` |
+| libassert | 2.2.1 | [jeremy-rifkin/libassert](https://github.com/jeremy-rifkin/libassert) | `DEBUG_RELEASE` |
+| tclap | 1.0.0 | (SourceForge; version of our own) | `RELEASE` |
+| Catch2 | 3.16.1 | [catchorg/Catch2](https://github.com/catchorg/Catch2) | `DEBUG_RELEASE` |
+| pipes | 0.0.1 | [joboccara/pipes](https://github.com/joboccara/pipes) (no releases) | `RELEASE` |
+| NamedType | 1.1.0 | [joboccara/NamedType](https://github.com/joboccara/NamedType) | `RELEASE` |
+| tl-optional | 1.1.0 | [TartanLlama/optional](https://github.com/TartanLlama/optional) | `RELEASE` |
+| tl-expected | 1.3.1 | [TartanLlama/expected](https://github.com/TartanLlama/expected) | `RELEASE` |
 
 ### Library Dependency Graph
 
@@ -181,7 +184,7 @@ graph TD
 |---|---|---|
 | `fmt-eigen` → `eigen3` | link | [`workspace/fmt-eigen/fmt-eigen/CMakeLists.txt`](workspace/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
 | `fmt-eigen` → `fmt` | link | same file: `cs_find_package(... fmt REQUIRED CONFIG)`, links `fmt::fmt`; re-declared via `find_dependency(fmt)` in `fmt-eigenConfig.cmake` |
-| `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`; exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
+| `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
 | `pipes` → `Catch2` | **tests only** | [`workspace/pipes/tests/CMakeLists.txt`](workspace/pipes/tests/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-optional` → `Catch2` | **tests only** | [`workspace/tl-optional/CMakeLists.txt`](workspace/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-expected` → `Catch2` | **tests only** | [`workspace/tl-expected/CMakeLists.txt`](workspace/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
