@@ -18,6 +18,8 @@ from csorchestrator.application.recipes.repos_config import (
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
+    get_context_list_linux,
+    get_context_list_macos,
 )
 from csorchestrator.portable.release_manifest import PublishPackageMode
 
@@ -28,7 +30,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
-    cscmake_version = "1.0.0-rc1"
+    cscmake_version = "1.0.0-rc5"
 
     repos: RepoRefBuildPublishConfigDict = {
         "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
@@ -41,11 +43,16 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
         "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "pipes": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
+
+    # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
+    # (arm64, Apple Clang; Ninja Multi-Config and Xcode)
+    additional_matrix = (
+        get_context_list_linux("ubuntu26.04") + get_context_list_macos("macos15") + get_context_list_macos("macos26")
+    )
 
     dependencies: dict[str, set[str]] = {
         "fmt-eigen": {"eigen3", "fmt"},
@@ -63,6 +70,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         ],
         repo_dependencies_dict=dependencies,
         repo_dependencies_dev_dict={},
+        additional_matrix_list=additional_matrix,
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
         release_archive_list=[create_cscmake_release_archive(cscmake_version)],
     )

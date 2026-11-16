@@ -71,7 +71,7 @@ pre-commit run --all-files
 
 ## Overview
 
-Building cross-platform third-party C/C++ libraries from source across multiple platforms (Linux and Windows) and architectures (`x64` and `arm64`) can be complex and error-prone. **third_party_base_libs** defines a declarative build and packaging recipe in Python using the `csorchestrator` framework.
+Building cross-platform third-party C/C++ libraries from source across multiple platforms (Linux, Windows and macOS) and architectures (`x64` and `arm64`) can be complex and error-prone. **third_party_base_libs** defines a declarative build and packaging recipe in Python using the `csorchestrator` framework.
 
 With this setup:
 - The build pipeline, dependencies, and repository list are defined in Python code.
@@ -92,7 +92,7 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 1. **Repos Self Checkout & Update**:
    - Performs a shallow (`depth=1`) self-checkout of this repository so release assembly runs on the runner.
-   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc1`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
+   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc5`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
 2. **Checkout & Build each library**: for every repository configured in [`third_party_base_libs_project.py`](third_party_base_libs_project.py):
    - Clones or pulls the repository into `workspace/<repo>` at the configured ref (usually `dev`).
    - Configures, builds, and installs the library into `workspace/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
@@ -105,20 +105,22 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 ### Included Libraries
 
-| Repository | BuildConfig |
-|---|---|
-| eigen3 | `RELEASE` |
-| fmt | `DEBUG_RELEASE` |
-| fmt-eigen | `RELEASE` |
-| cpptrace | `DEBUG_RELEASE` |
-| magic_enum | `DEBUG_RELEASE` |
-| libassert | `DEBUG_RELEASE` |
-| tclap | `RELEASE` |
-| Catch2 | `DEBUG_RELEASE` |
-| pipes | `RELEASE` |
-| NamedType | `RELEASE` |
-| tl-optional | `RELEASE` |
-| tl-expected | `RELEASE` |
+Each library is a fork on `cscosine/<repo>` (`dev`: an upstream release + our commits, the csCMake integration and
+compiler fixes); the version is the one of its installed CMake package.
+
+| Repository | Version | Upstream | BuildConfig |
+|---|---|---|---|
+| eigen3 | 5.0.1 | [libeigen/eigen](https://gitlab.com/libeigen/eigen) | `RELEASE` |
+| fmt | 12.2.1 | [fmtlib/fmt](https://github.com/fmtlib/fmt) | `DEBUG_RELEASE` |
+| fmt-eigen | 1.0.0 | (no releases; author Yunfan REN) | `RELEASE` |
+| cpptrace | 1.0.4 | [jeremy-rifkin/cpptrace](https://github.com/jeremy-rifkin/cpptrace) | `DEBUG_RELEASE` |
+| magic_enum | 0.9.8 | [Neargye/magic_enum](https://github.com/Neargye/magic_enum) | `DEBUG_RELEASE` |
+| libassert | 2.2.1 | [jeremy-rifkin/libassert](https://github.com/jeremy-rifkin/libassert) | `DEBUG_RELEASE` |
+| tclap | 1.0.0 | (SourceForge; version of our own) | `RELEASE` |
+| Catch2 | 3.16.1 | [catchorg/Catch2](https://github.com/catchorg/Catch2) | `DEBUG_RELEASE` |
+| NamedType | 1.1.0 | [joboccara/NamedType](https://github.com/joboccara/NamedType) | `RELEASE` |
+| tl-optional | 1.1.0 | [TartanLlama/optional](https://github.com/TartanLlama/optional) | `RELEASE` |
+| tl-expected | 1.3.1 | [TartanLlama/expected](https://github.com/TartanLlama/expected) | `RELEASE` |
 
 ### Library Dependency Graph
 
@@ -148,7 +150,6 @@ graph TD
     end
 
     subgraph test_users["Test-only consumers"]
-        pipes["pipes"]
         tl_optional["tl-optional"]
         tl_expected["tl-expected"]
     end
@@ -164,7 +165,6 @@ graph TD
     fmt_eigen --> fmt
     libassert --> cpptrace
 
-    pipes -. "tests only" .-> catch2
     tl_optional -. "tests only" .-> catch2
     tl_expected -. "tests only" .-> catch2
 
@@ -172,7 +172,7 @@ graph TD
     dependents ~~~ link_deps ~~~ test_users ~~~ foundation
 
     class fmt_eigen,libassert consumer;
-    class eigen3,fmt,cpptrace,magic_enum,catch2,namedtype,tclap,pipes,tl_optional,tl_expected leaf;
+    class eigen3,fmt,cpptrace,magic_enum,catch2,namedtype,tclap,tl_optional,tl_expected leaf;
 ```
 
 **Edge legend:**
@@ -181,24 +181,25 @@ graph TD
 |---|---|---|
 | `fmt-eigen` → `eigen3` | link | [`workspace/fmt-eigen/fmt-eigen/CMakeLists.txt`](workspace/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
 | `fmt-eigen` → `fmt` | link | same file: `cs_find_package(... fmt REQUIRED CONFIG)`, links `fmt::fmt`; re-declared via `find_dependency(fmt)` in `fmt-eigenConfig.cmake` |
-| `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`; exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
-| `pipes` → `Catch2` | **tests only** | [`workspace/pipes/tests/CMakeLists.txt`](workspace/pipes/tests/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
+| `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
 | `tl-optional` → `Catch2` | **tests only** | [`workspace/tl-optional/CMakeLists.txt`](workspace/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-expected` → `Catch2` | **tests only** | [`workspace/tl-expected/CMakeLists.txt`](workspace/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 
 **Notes:**
 
-- **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `pipes`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
+- **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
 - **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `workspace/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
 - **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`workspace/libassert/include/libassert/stringification.hpp`](workspace/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
 - `cpptrace` statically bundles `zstd` and `libdwarf` (via `FetchContent`) for stacktrace symbolization — visible as `libzstd.a` / `libdwarf.a` in its install output; these are *not* separate entries in the recipe.
-- Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `pipes`, `NamedType`, `tl-optional`, `tl-expected`.
+- Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `NamedType`, `tl-optional`, `tl-expected`.
 
 ---
 
 ## Supported Build Matrix
 
-The target execution matrix is emitted by the `csorchestrator` default matrix used in `create_default_orchestrator()`:
+The target execution matrix: the `csorchestrator` default matrix used in `create_default_orchestrator()` (Ubuntu
+22.04 / 24.04, Windows), plus the opt-in variants of `additional_matrix_list` in
+[`third_party_base_libs_project.py`](third_party_base_libs_project.py) (Ubuntu 26.04, macOS 15 / 26):
 
 | OS | Version | Architecture | Compiler | Generator |
 |---|---|---|---|---|
@@ -210,10 +211,22 @@ The target execution matrix is emitted by the `csorchestrator` default matrix us
 | **Linux** | Ubuntu 24.04 | `x64` | Clang (default) | Ninja Multi-Config |
 | **Linux** | Ubuntu 24.04 | `arm64` | GCC (default) | Ninja |
 | **Linux** | Ubuntu 24.04 | `arm64` | Clang (default) | Ninja |
+| **Linux** | Ubuntu 26.04 | `x64` | GCC (default) | Ninja Multi-Config |
+| **Linux** | Ubuntu 26.04 | `x64` | Clang (default) | Ninja Multi-Config |
+| **Linux** | Ubuntu 26.04 | `arm64` | GCC (default) | Ninja |
+| **Linux** | Ubuntu 26.04 | `arm64` | Clang (default) | Ninja |
+| **macOS** | macOS 15 | `arm64` | Apple Clang | Ninja Multi-Config |
+| **macOS** | macOS 15 | `arm64` | Apple Clang | Xcode |
+| **macOS** | macOS 26 | `arm64` | Apple Clang | Ninja Multi-Config |
+| **macOS** | macOS 26 | `arm64` | Apple Clang | Xcode |
 | **Windows** | Windows 10 | `x64` | MSVC 2022 (v17) | Visual Studio 17 2022 |
 | **Windows** | Windows 10 | `x64` | MSVC 2026 (v18) | Visual Studio 18 2026 |
 | **Windows** | Windows 10 | `x64` | MSVC-Clang (v17) | Visual Studio 17 2022 |
 | **Windows** | Windows 10 | `x64` | MSVC-Clang (v18) | Visual Studio 18 2026 |
+
+macOS: the binaries run on macOS 13.3 and newer (`CMAKE_OSX_DEPLOYMENT_TARGET` of the csCMake presets); the runners
+of Ubuntu 26.04 (`ubuntu-26.04`, `ubuntu-26.04-arm`) are newer than the actionlint release of pre-commit:
+[`.github/actionlint.yaml`](.github/actionlint.yaml).
 
 ---
 
