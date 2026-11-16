@@ -71,7 +71,7 @@ pre-commit run --all-files
 
 ## Overview
 
-Building cross-platform third-party C/C++ libraries from source across multiple platforms (Linux and Windows) and architectures (`x64` and `arm64`) can be complex and error-prone. **third_party_base_libs** defines a declarative build and packaging recipe in Python using the `csorchestrator` framework.
+Building cross-platform third-party C/C++ libraries from source across multiple platforms (Linux, Windows and macOS) and architectures (`x64` and `arm64`) can be complex and error-prone. **third_party_base_libs** defines a declarative build and packaging recipe in Python using the `csorchestrator` framework.
 
 With this setup:
 - The build pipeline, dependencies, and repository list are defined in Python code.
@@ -92,7 +92,7 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 1. **Repos Self Checkout & Update**:
    - Performs a shallow (`depth=1`) self-checkout of this repository so release assembly runs on the runner.
-   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc1`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
+   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc5`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
 2. **Checkout & Build each library**: for every repository configured in [`third_party_base_libs_project.py`](third_party_base_libs_project.py):
    - Clones or pulls the repository into `workspace/<repo>` at the configured ref (usually `dev`).
    - Configures, builds, and installs the library into `workspace/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
@@ -198,7 +198,9 @@ graph TD
 
 ## Supported Build Matrix
 
-The target execution matrix is emitted by the `csorchestrator` default matrix used in `create_default_orchestrator()`:
+The target execution matrix: the `csorchestrator` default matrix used in `create_default_orchestrator()` (Ubuntu
+22.04 / 24.04, Windows), plus the opt-in variants of `additional_matrix_list` in
+[`third_party_base_libs_project.py`](third_party_base_libs_project.py) (Ubuntu 26.04, macOS 15 / 26):
 
 | OS | Version | Architecture | Compiler | Generator |
 |---|---|---|---|---|
@@ -210,10 +212,22 @@ The target execution matrix is emitted by the `csorchestrator` default matrix us
 | **Linux** | Ubuntu 24.04 | `x64` | Clang (default) | Ninja Multi-Config |
 | **Linux** | Ubuntu 24.04 | `arm64` | GCC (default) | Ninja |
 | **Linux** | Ubuntu 24.04 | `arm64` | Clang (default) | Ninja |
+| **Linux** | Ubuntu 26.04 | `x64` | GCC (default) | Ninja Multi-Config |
+| **Linux** | Ubuntu 26.04 | `x64` | Clang (default) | Ninja Multi-Config |
+| **Linux** | Ubuntu 26.04 | `arm64` | GCC (default) | Ninja |
+| **Linux** | Ubuntu 26.04 | `arm64` | Clang (default) | Ninja |
+| **macOS** | macOS 15 | `arm64` | Apple Clang | Ninja Multi-Config |
+| **macOS** | macOS 15 | `arm64` | Apple Clang | Xcode |
+| **macOS** | macOS 26 | `arm64` | Apple Clang | Ninja Multi-Config |
+| **macOS** | macOS 26 | `arm64` | Apple Clang | Xcode |
 | **Windows** | Windows 10 | `x64` | MSVC 2022 (v17) | Visual Studio 17 2022 |
 | **Windows** | Windows 10 | `x64` | MSVC 2026 (v18) | Visual Studio 18 2026 |
 | **Windows** | Windows 10 | `x64` | MSVC-Clang (v17) | Visual Studio 17 2022 |
 | **Windows** | Windows 10 | `x64` | MSVC-Clang (v18) | Visual Studio 18 2026 |
+
+macOS: the binaries run on macOS 13.3 and newer (`CMAKE_OSX_DEPLOYMENT_TARGET` of the csCMake presets); the runners
+of Ubuntu 26.04 (`ubuntu-26.04`, `ubuntu-26.04-arm`) are newer than the actionlint release of pre-commit:
+[`.github/actionlint.yaml`](.github/actionlint.yaml).
 
 ---
 
