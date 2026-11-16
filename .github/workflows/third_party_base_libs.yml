@@ -53,7 +53,7 @@ jobs:
         list_additional_files = [Path('third_party_base_libs_config.py')]
         output_folder_additional_files = Path(os.environ["GITHUB_WORKSPACE"]) / Path('generated-for-release')
         output_bundle_file_name = Path('third_party_base_libs-0.1.0-bundle.tar.gz')
-        repo_publish_config_dict = {'eigen3': PublishPackageMode.HEADERS_ONLY, 'fmt': PublishPackageMode.ON_VARIANT, 'fmt-eigen': PublishPackageMode.HEADERS_ONLY, 'cpptrace': PublishPackageMode.ON_VARIANT, 'magic_enum': PublishPackageMode.HEADERS_ONLY, 'libassert': PublishPackageMode.ON_VARIANT, 'tclap': PublishPackageMode.HEADERS_ONLY, 'Catch2': PublishPackageMode.ON_VARIANT, 'pipes': PublishPackageMode.HEADERS_ONLY, 'NamedType': PublishPackageMode.HEADERS_ONLY, 'tl-optional': PublishPackageMode.HEADERS_ONLY, 'tl-expected': PublishPackageMode.HEADERS_ONLY}
+        repo_publish_config_dict = {'eigen3': PublishPackageMode.HEADERS_ONLY, 'fmt': PublishPackageMode.ON_VARIANT, 'fmt-eigen': PublishPackageMode.HEADERS_ONLY, 'cpptrace': PublishPackageMode.ON_VARIANT, 'magic_enum': PublishPackageMode.HEADERS_ONLY, 'libassert': PublishPackageMode.ON_VARIANT, 'tclap': PublishPackageMode.HEADERS_ONLY, 'Catch2': PublishPackageMode.ON_VARIANT, 'NamedType': PublishPackageMode.HEADERS_ONLY, 'tl-optional': PublishPackageMode.HEADERS_ONLY, 'tl-expected': PublishPackageMode.HEADERS_ONLY}
         header_only_variants_sources = {'csv1-linux': 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig', 'csv1-windows': 'csv1-windows-v10-x64-generic-msvc-default-msvc2022', 'csv1-macos': 'csv1-macos-macos15-arm64-generic-appleclang-default-ninjamulticonfig'}
         dependencies = {'fmt-eigen': {'eigen3', 'fmt'}, 'libassert': {'cpptrace'}}
         dependencies_dev = {}
@@ -445,14 +445,6 @@ jobs:
         ref: dev
         fetch-depth: '1'
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-    - name: pipes Git clone/pull-ff
-      uses: actions/checkout@v6
-      with:
-        repository: cscosine/pipes.git
-        path: workspace/pipes
-        ref: dev
-        fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: NamedType Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -586,19 +578,6 @@ jobs:
         fi
       shell: bash
       working-directory: workspace/Catch2
-    - name: cmake workflow on pipes CMake Workflow for config(s) release
-      run: |-
-        set -e
-        if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-        elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-        else
-          echo "Unknown generator_type: ${{ matrix.generator_type }}"
-          exit 1
-        fi
-      shell: bash
-      working-directory: workspace/pipes
     - name: cmake workflow on NamedType CMake Workflow for config(s) release
       run: |-
         set -e
@@ -648,7 +627,7 @@ jobs:
         from csorchestratorsdk.portable.release_manifest import get_package_versions_and_write_single_variant_manifest
 
         repos_config_file_list = []
-        repos_auto_search_list = ['eigen3', 'fmt', 'fmt-eigen', 'cpptrace', 'magic_enum', 'libassert', 'tclap', 'Catch2', 'pipes', 'NamedType', 'tl-optional', 'tl-expected']
+        repos_auto_search_list = ['eigen3', 'fmt', 'fmt-eigen', 'cpptrace', 'magic_enum', 'libassert', 'tclap', 'Catch2', 'NamedType', 'tl-optional', 'tl-expected']
         repos_version = []
         base_install_dir = Path('workspace/install')
         install_subdir = Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}')

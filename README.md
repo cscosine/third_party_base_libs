@@ -118,7 +118,6 @@ compiler fixes); the version is the one of its installed CMake package.
 | libassert | 2.2.1 | [jeremy-rifkin/libassert](https://github.com/jeremy-rifkin/libassert) | `DEBUG_RELEASE` |
 | tclap | 1.0.0 | (SourceForge; version of our own) | `RELEASE` |
 | Catch2 | 3.16.1 | [catchorg/Catch2](https://github.com/catchorg/Catch2) | `DEBUG_RELEASE` |
-| pipes | 0.0.1 | [joboccara/pipes](https://github.com/joboccara/pipes) (no releases) | `RELEASE` |
 | NamedType | 1.1.0 | [joboccara/NamedType](https://github.com/joboccara/NamedType) | `RELEASE` |
 | tl-optional | 1.1.0 | [TartanLlama/optional](https://github.com/TartanLlama/optional) | `RELEASE` |
 | tl-expected | 1.3.1 | [TartanLlama/expected](https://github.com/TartanLlama/expected) | `RELEASE` |
@@ -151,7 +150,6 @@ graph TD
     end
 
     subgraph test_users["Test-only consumers"]
-        pipes["pipes"]
         tl_optional["tl-optional"]
         tl_expected["tl-expected"]
     end
@@ -167,7 +165,6 @@ graph TD
     fmt_eigen --> fmt
     libassert --> cpptrace
 
-    pipes -. "tests only" .-> catch2
     tl_optional -. "tests only" .-> catch2
     tl_expected -. "tests only" .-> catch2
 
@@ -175,7 +172,7 @@ graph TD
     dependents ~~~ link_deps ~~~ test_users ~~~ foundation
 
     class fmt_eigen,libassert consumer;
-    class eigen3,fmt,cpptrace,magic_enum,catch2,namedtype,tclap,pipes,tl_optional,tl_expected leaf;
+    class eigen3,fmt,cpptrace,magic_enum,catch2,namedtype,tclap,tl_optional,tl_expected leaf;
 ```
 
 **Edge legend:**
@@ -185,17 +182,16 @@ graph TD
 | `fmt-eigen` → `eigen3` | link | [`workspace/fmt-eigen/fmt-eigen/CMakeLists.txt`](workspace/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
 | `fmt-eigen` → `fmt` | link | same file: `cs_find_package(... fmt REQUIRED CONFIG)`, links `fmt::fmt`; re-declared via `find_dependency(fmt)` in `fmt-eigenConfig.cmake` |
 | `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
-| `pipes` → `Catch2` | **tests only** | [`workspace/pipes/tests/CMakeLists.txt`](workspace/pipes/tests/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-optional` → `Catch2` | **tests only** | [`workspace/tl-optional/CMakeLists.txt`](workspace/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-expected` → `Catch2` | **tests only** | [`workspace/tl-expected/CMakeLists.txt`](workspace/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 
 **Notes:**
 
-- **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `pipes`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
+- **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
 - **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `workspace/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
 - **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`workspace/libassert/include/libassert/stringification.hpp`](workspace/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
 - `cpptrace` statically bundles `zstd` and `libdwarf` (via `FetchContent`) for stacktrace symbolization — visible as `libzstd.a` / `libdwarf.a` in its install output; these are *not* separate entries in the recipe.
-- Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `pipes`, `NamedType`, `tl-optional`, `tl-expected`.
+- Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `NamedType`, `tl-optional`, `tl-expected`.
 
 ---
 

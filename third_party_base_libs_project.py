@@ -43,7 +43,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
         "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "pipes": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
