@@ -1,9 +1,11 @@
 # TODO: next steps for third_party_base_libs
 
-State (2026-11-16): every library at its latest upstream release, built with csCMake 1.0.0-rc5 (the released
-package, `cscmake_version` in [`third_party_base_libs_project.py`](third_party_base_libs_project.py)) on 20 variants
-(Ubuntu 22.04 / 24.04 / 26.04, Windows, macOS 15 / 26); release `v0.1.0-rc7`. Each work stream ends with a new rc
-tag and a check of the consumers (csfoundation first).
+State (2026-11-16): every library at its latest upstream release, built with csCMake 1.0.0-rc6 (the released package,
+`cscmake_version` in [`third_party_base_libs_project.py`](third_party_base_libs_project.py)) on 20 variants (Ubuntu
+22.04 / 24.04 / 26.04, Windows, macOS 15 / 26); release `v0.1.0-rc8`. macOS: the compiled libraries (fmt, cpptrace,
+libassert, Catch2) are built for macOS 13.3 and record it in their package (`share/cscmake/`), set in the
+`cscmake-project-setup-macos` preset of their `csCMakeProjectSetup.json`; the header-only ones set nothing. Each work
+stream ends with a new rc tag and a check of the consumers (csfoundation first).
 
 ## 1. Review the libraries: sync with upstream (one shot, then periodic)
 

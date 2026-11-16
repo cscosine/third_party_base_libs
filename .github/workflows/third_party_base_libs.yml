@@ -369,17 +369,17 @@ jobs:
     steps:
     - name: Repo git self-checkout
       uses: actions/checkout@v6
-    - name: csCMake v1.0.0-rc5 release download tar.gz
+    - name: csCMake v1.0.0-rc6 release download tar.gz
       uses: robinraju/release-downloader@v1.13
       with:
         repository: cscosine/csCMake
-        tag: v1.0.0-rc5
-        fileName: csCMake-1.0.0-rc5.tar.gz
+        tag: v1.0.0-rc6
+        fileName: csCMake-1.0.0-rc6.tar.gz
         out-file-path: workspace
-    - name: csCMake v1.0.0-rc5 release extract tar.gz
+    - name: csCMake v1.0.0-rc6 release extract tar.gz
       run: |-
-        tar -xzf workspace/csCMake-1.0.0-rc5.tar.gz -C workspace
-        rm -f workspace/csCMake-1.0.0-rc5.tar.gz
+        tar -xzf workspace/csCMake-1.0.0-rc6.tar.gz -C workspace
+        rm -f workspace/csCMake-1.0.0-rc6.tar.gz
       shell: bash
     - name: eigen3 Git clone/pull-ff
       uses: actions/checkout@v6

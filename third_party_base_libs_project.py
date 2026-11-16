@@ -30,7 +30,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
-    cscmake_version = "1.0.0-rc5"
+    cscmake_version = "1.0.0-rc6"
 
     repos: RepoRefBuildPublishConfigDict = {
         "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
