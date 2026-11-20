@@ -2,7 +2,7 @@ name: third_party_base_libs
 'on':
   push:
     branches:
-    - dev
+    - main
     tags:
     - v*.*.*
   workflow_dispatch: {}
@@ -383,77 +383,77 @@ jobs:
       with:
         repository: cscosine/eigen3.git
         path: workspace/eigen3
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: fmt Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt.git
         path: workspace/fmt
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: fmt-eigen Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt-eigen.git
         path: workspace/fmt-eigen
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: cpptrace Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/cpptrace.git
         path: workspace/cpptrace
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/magic_enum.git
         path: workspace/magic_enum
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: libassert Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/libassert.git
         path: workspace/libassert
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: tclap Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tclap.git
         path: workspace/tclap
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: Catch2 Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/Catch2.git
         path: workspace/Catch2
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: NamedType Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/NamedType.git
         path: workspace/NamedType
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: tl-optional Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-optional.git
         path: workspace/tl-optional
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: tl-expected Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-expected.git
         path: workspace/tl-expected
-        ref: dev
+        ref: main
         fetch-depth: '1'
     - name: cmake workflow on eigen3 CMake Workflow for config(s) release
       run: |-

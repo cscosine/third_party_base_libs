@@ -94,7 +94,7 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
    - Performs a shallow (`depth=1`) self-checkout of this repository so release assembly runs on the runner.
    - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc8`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
 2. **Checkout & Build each library**: for every repository configured in [`third_party_base_libs_project.py`](third_party_base_libs_project.py):
-   - Clones or pulls the repository into `workspace/<repo>` at the configured ref (usually `dev`).
+   - Clones or pulls the repository into `workspace/<repo>` at the configured ref (usually `main`).
    - Configures, builds, and installs the library into `workspace/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
 3. **Get Versions**:
    - Reads each installed library's package version (CMakeConfig package) and writes a per-variant `.csorchestratorManifest`.
@@ -105,7 +105,7 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 ### Included Libraries
 
-Each library is a fork on `cscosine/<repo>` (`dev`: an upstream release + our commits, the csCMake integration and
+Each library is a fork on `cscosine/<repo>` (`main`: an upstream release + our commits, the csCMake integration and
 compiler fixes); the version is the one of its installed CMake package.
 
 | Repository | Version | Upstream | BuildConfig |
