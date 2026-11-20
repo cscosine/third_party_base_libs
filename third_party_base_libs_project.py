@@ -30,7 +30,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
-    cscmake_version = "1.0.0-rc6"
+    cscmake_version = "1.0.0-rc8"
 
     repos: RepoRefBuildPublishConfigDict = {
         "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
@@ -71,7 +71,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         repo_dependencies_dict=dependencies,
         repo_dependencies_dev_dict={},
         additional_matrix_list=additional_matrix,
-        repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
         release_archive_list=[create_cscmake_release_archive(cscmake_version)],
     )
 

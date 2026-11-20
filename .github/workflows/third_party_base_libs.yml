@@ -2,13 +2,9 @@ name: third_party_base_libs
 'on':
   push:
     branches:
-    - main
     - dev
     tags:
     - v*.*.*
-  pull_request:
-    branches:
-    - main
   workflow_dispatch: {}
   schedule:
   - cron: 0 3 * * 1
@@ -105,6 +101,7 @@ jobs:
           artifacts/**/*.zip
           generated-for-release/third_party_base_libs-0.1.0.csOrchestratorManifest
           generated-for-release/third_party_base_libs-0.1.0-bundle.tar.gz
+        prerelease: ${{ contains(github.ref_name, '-rc') }}
       if: ${{ github.ref_type == 'tag' }}
   orchestrator-matrix:
     runs-on: ${{ matrix.runner }}
@@ -369,17 +366,17 @@ jobs:
     steps:
     - name: Repo git self-checkout
       uses: actions/checkout@v6
-    - name: csCMake v1.0.0-rc6 release download tar.gz
+    - name: csCMake v1.0.0-rc8 release download tar.gz
       uses: robinraju/release-downloader@v1.13
       with:
         repository: cscosine/csCMake
-        tag: v1.0.0-rc6
-        fileName: csCMake-1.0.0-rc6.tar.gz
+        tag: v1.0.0-rc8
+        fileName: csCMake-1.0.0-rc8.tar.gz
         out-file-path: workspace
-    - name: csCMake v1.0.0-rc6 release extract tar.gz
+    - name: csCMake v1.0.0-rc8 release extract tar.gz
       run: |-
-        tar -xzf workspace/csCMake-1.0.0-rc6.tar.gz -C workspace
-        rm -f workspace/csCMake-1.0.0-rc6.tar.gz
+        tar -xzf workspace/csCMake-1.0.0-rc8.tar.gz -C workspace
+        rm -f workspace/csCMake-1.0.0-rc8.tar.gz
       shell: bash
     - name: eigen3 Git clone/pull-ff
       uses: actions/checkout@v6
@@ -388,7 +385,6 @@ jobs:
         path: workspace/eigen3
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: fmt Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -396,7 +392,6 @@ jobs:
         path: workspace/fmt
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: fmt-eigen Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -404,7 +399,6 @@ jobs:
         path: workspace/fmt-eigen
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: cpptrace Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -412,7 +406,6 @@ jobs:
         path: workspace/cpptrace
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -420,7 +413,6 @@ jobs:
         path: workspace/magic_enum
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: libassert Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -428,7 +420,6 @@ jobs:
         path: workspace/libassert
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tclap Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -436,7 +427,6 @@ jobs:
         path: workspace/tclap
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: Catch2 Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -444,7 +434,6 @@ jobs:
         path: workspace/Catch2
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: NamedType Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -452,7 +441,6 @@ jobs:
         path: workspace/NamedType
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tl-optional Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -460,7 +448,6 @@ jobs:
         path: workspace/tl-optional
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: tl-expected Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -468,7 +455,6 @@ jobs:
         path: workspace/tl-expected
         ref: dev
         fetch-depth: '1'
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
     - name: cmake workflow on eigen3 CMake Workflow for config(s) release
       run: |-
         set -e
