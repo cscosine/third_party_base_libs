@@ -1,5 +1,7 @@
 # third_party_base_libs
 
+Eigen, fmt, cpptrace, libassert, magic_enum, Catch2, ... built for every platform
+
 Automated cross-platform build system and CI pipeline recipe for **third-party base C/C++ libraries** (Eigen3, fmt, Catch2, and more), powered by [**csorchestrator**](https://github.com/cscosine/csorchestrator).
 
 ---
@@ -48,8 +50,6 @@ The shared files (setup, checks, CI, agent rules) come from
 [cs-project-template](https://github.com/cscosine/cs-project-template); to bring them to its latest version, on a
 branch: `copier update --defaults`.
 <!-- cs-template:end -->
-
----
 
 ## Overview
 
