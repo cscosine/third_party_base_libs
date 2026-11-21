@@ -29,23 +29,23 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
-    common_repo_ref = "main"
     cscmake_version = "1.0.0-rc8"
 
+    # every library by tag: the forks v<upstream>-cs.<n>, the copies of our own their semver (FORKS.md)
     repos: RepoRefBuildPublishConfigDict = {
-        "eigen3": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "fmt": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "fmt-eigen": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "cpptrace": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
+        "eigen3": RepoRefBuildPublishConfig("v5.0.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "fmt": RepoRefBuildPublishConfig("v12.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
+        "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0-rc1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "cpptrace": RepoRefBuildPublishConfig("v1.0.4-cs.2", BuildConfig.DEBUG_RELEASE),
         "magic_enum": RepoRefBuildPublishConfig(
-            common_repo_ref, BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
+            "v0.9.8-cs.2", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
         ),
-        "libassert": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "tclap": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "Catch2": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.DEBUG_RELEASE),
-        "NamedType": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "tl-optional": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "tl-expected": RepoRefBuildPublishConfig(common_repo_ref, BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "libassert": RepoRefBuildPublishConfig("v2.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
+        "tclap": RepoRefBuildPublishConfig("v1.0.0-rc1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "Catch2": RepoRefBuildPublishConfig("v3.16.1-cs.2", BuildConfig.DEBUG_RELEASE),
+        "NamedType": RepoRefBuildPublishConfig("v1.1.0-rc1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-optional": RepoRefBuildPublishConfig("v1.1.0-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tl-expected": RepoRefBuildPublishConfig("v1.3.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
