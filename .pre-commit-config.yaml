@@ -1,5 +1,5 @@
 # Owned by the project template (cs-project-template): change it there.
-# Project hooks: at the end, after the marker (appended repos merge cleanly on `copier update`).
+# Project hooks: between the `project: begin` / `project: end` markers (they merge cleanly on `copier update`).
 fail_fast: false # using true is too annoying in development
 
 repos:
@@ -57,6 +57,10 @@ repos:
     hooks:
       - id: actionlint
 
+  # --- project: begin (this repository's own hooks, between the two markers) ---
+  # --- project: end ---
+
+  # the final check, always last (template)
   - repo: local
     hooks:
       - id: no-unstaged-changes
@@ -64,5 +68,3 @@ repos:
         entry: git diff --quiet
         language: system
         pass_filenames: false
-
-  # --- project ---

@@ -18,8 +18,9 @@ there, then `copier update --defaults`; never edit its parts here):
 - Template: `setup.sh`, `setup.ps1`, `open-code.sh`, `open-code.ps1`, `conftest.py`, `.clang-format`,
   `.vscode/`, `.github/` (not `workflows/`), `CLAUDE.md`, `.claude/cscosine-rules.md`, `.claude/settings.json`,
   `LICENSE`.
-- Template and project: `pyproject.toml` (template tables between the `template` markers), `.pre-commit-config.yaml`,
-  `.gitignore`, `.gitattributes` (project lines after `--- project ---`), `README.md` and this file (the
+- Template and project: `pyproject.toml` (template tables between the `template` markers), `.pre-commit-config.yaml` (project hooks
+  between the `project: begin` / `project: end` markers), `.gitignore`, `.gitattributes` (project lines after
+  `--- project ---`), `README.md` and this file (the
   `cs-template` block).
 - csorchestrator (generated, never edited): `.github/workflows/third_party_base_libs.yml`, `csorchestratorsdk/`,
   `dependencies/`.
