@@ -383,77 +383,77 @@ jobs:
       with:
         repository: cscosine/eigen3.git
         path: workspace/eigen3
-        ref: main
+        ref: v5.0.1-cs.2
         fetch-depth: '1'
     - name: fmt Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt.git
         path: workspace/fmt
-        ref: main
+        ref: v12.2.1-cs.2
         fetch-depth: '1'
     - name: fmt-eigen Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt-eigen.git
         path: workspace/fmt-eigen
-        ref: main
+        ref: v1.0.0-rc1
         fetch-depth: '1'
     - name: cpptrace Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/cpptrace.git
         path: workspace/cpptrace
-        ref: main
+        ref: v1.0.4-cs.2
         fetch-depth: '1'
     - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/magic_enum.git
         path: workspace/magic_enum
-        ref: main
+        ref: v0.9.8-cs.2
         fetch-depth: '1'
     - name: libassert Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/libassert.git
         path: workspace/libassert
-        ref: main
+        ref: v2.2.1-cs.2
         fetch-depth: '1'
     - name: tclap Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tclap.git
         path: workspace/tclap
-        ref: main
+        ref: v1.0.0-rc1
         fetch-depth: '1'
     - name: Catch2 Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/Catch2.git
         path: workspace/Catch2
-        ref: main
+        ref: v3.16.1-cs.2
         fetch-depth: '1'
     - name: NamedType Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/NamedType.git
         path: workspace/NamedType
-        ref: main
+        ref: v1.1.0-rc1
         fetch-depth: '1'
     - name: tl-optional Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-optional.git
         path: workspace/tl-optional
-        ref: main
+        ref: v1.1.0-cs.2
         fetch-depth: '1'
     - name: tl-expected Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-expected.git
         path: workspace/tl-expected
-        ref: main
+        ref: v1.3.1-cs.2
         fetch-depth: '1'
     - name: cmake workflow on eigen3 CMake Workflow for config(s) release
       run: |-
