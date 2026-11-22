@@ -219,7 +219,7 @@ of Ubuntu 26.04 (`ubuntu-26.04`, `ubuntu-26.04-arm`) are newer than the actionli
 
 ```
 third_party_base_libs/
-├── .agents/skills/
+├── .claude/skills/
 │   └── third_party_base_libs-orchestrator-recipe/ # Agent skill for auditing recipes & re-generating workflows
 ├── third_party_base_libs_project.py                       # Main orchestrator pipeline recipe (source of truth)
 ├── pyproject.toml                            # Project packaging, Ruff, MyPy, and Pytest configuration
@@ -237,19 +237,19 @@ third_party_base_libs/
 
 ## Agent Skills
 
-This repository includes a project-specific agent skill under [`.agents/skills/`](.agents/skills/):
+This repository includes a project-specific agent skill under [`.claude/skills/`](.claude/skills/), where Claude Code finds it:
 
-* [**`third_party_base_libs-orchestrator-recipe`**](.agents/skills/third_party_base_libs-orchestrator-recipe/SKILL.md): Guides AI coding assistants in auditing recipe consistency (checking that extra files exist, verifying version and repository-list alignment), re-generating the GitHub Actions workflow (`./third_party_base_libs_project.py generate-github-workflow`), and running pre-commit quality checks.
+* [**`third_party_base_libs-orchestrator-recipe`**](.claude/skills/third_party_base_libs-orchestrator-recipe/SKILL.md): Guides AI coding assistants in auditing recipe consistency (checking that extra files exist, verifying version and repository-list alignment), re-generating the GitHub Actions workflow (`./third_party_base_libs_project.py generate-github-workflow`), and running pre-commit quality checks.
 
 ### How to Use the Skill
 
-* **Automatic Activation (Natural Language)**: When using an AI coding assistant (e.g. Antigravity, Codex, Claude Code), the assistant automatically indexes `.agents/skills/` and follows this skill when given relevant prompts, such as:
+* **Automatic Activation (Natural Language)**: Claude Code loads the skills of `.claude/skills/` and follows this one when given relevant prompts, such as:
   * *"Audit the third_party_base_libs recipe consistency"*
   * *"Add a new library to the recipe and re-generate the workflow"*
   * *"Add a new build variant to the matrix"*
 * **Explicit Invocation**: Prompt the assistant directly:
   * *"Use the `third_party_base_libs-orchestrator-recipe` skill to audit the build recipe"*
-* **Human Developer Runbook (Standard Operating Procedure / SOP)**: For manual work without an AI assistant, [`.agents/skills/third_party_base_libs-orchestrator-recipe/SKILL.md`](.agents/skills/third_party_base_libs-orchestrator-recipe/SKILL.md) serves as a concise checklist for extra files, version alignment, and workflow re-generation commands.
+* **Human Developer Runbook (Standard Operating Procedure / SOP)**: For manual work without an AI assistant, [`.claude/skills/third_party_base_libs-orchestrator-recipe/SKILL.md`](.claude/skills/third_party_base_libs-orchestrator-recipe/SKILL.md) serves as a concise checklist for extra files, version alignment, and workflow re-generation commands.
 
 ---
 
