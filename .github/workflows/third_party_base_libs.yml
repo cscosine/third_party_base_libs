@@ -397,7 +397,7 @@ jobs:
       with:
         repository: cscosine/fmt-eigen.git
         path: workspace/fmt-eigen
-        ref: v1.0.0-rc3
+        ref: v1.0.0
         fetch-depth: '1'
     - name: cpptrace Git clone/pull-ff
       uses: actions/checkout@v6
@@ -425,7 +425,7 @@ jobs:
       with:
         repository: cscosine/tclap.git
         path: workspace/tclap
-        ref: v1.0.0-rc3
+        ref: v1.0.0
         fetch-depth: '1'
     - name: Catch2 Git clone/pull-ff
       uses: actions/checkout@v6
@@ -439,7 +439,7 @@ jobs:
       with:
         repository: cscosine/NamedType.git
         path: workspace/NamedType
-        ref: v1.1.0-rc3
+        ref: v1.1.0
         fetch-depth: '1'
     - name: tl-optional Git clone/pull-ff
       uses: actions/checkout@v6
