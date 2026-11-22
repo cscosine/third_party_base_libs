@@ -7,7 +7,7 @@ name: third_party_base_libs
     - v*.*.*
   workflow_dispatch: {}
   schedule:
-  - cron: 45 0 * * 1
+  - cron: 15 0 * * 1
 jobs:
   release-from-artifacts:
     needs: orchestrator-matrix

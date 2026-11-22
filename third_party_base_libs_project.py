@@ -63,7 +63,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     o = create_default_orchestrator_and_default_checkout_build_upload(
         name="third_party_base_libs",
         # staggered weekly run (UTC), one project at a time in the build-train order (no shared runners)
-        schedule=Cron.weekly(DayOfWeek.MON, hour=0, minute=45),
+        schedule=Cron.weekly(DayOfWeek.MON, hour=0, minute=15),
         version="0.1.0",
         base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
