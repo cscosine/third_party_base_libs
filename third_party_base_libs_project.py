@@ -29,21 +29,21 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
-    cscmake_version = "1.0.0-rc10"
+    cscmake_version = "1.0.0"
 
     # every library by tag: the forks v<upstream>-cs.<n>, the copies of our own their semver (FORKS.md)
     repos: RepoRefBuildPublishConfigDict = {
         "eigen3": RepoRefBuildPublishConfig("v5.0.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "fmt": RepoRefBuildPublishConfig("v12.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
-        "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0-rc2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0-rc3", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "cpptrace": RepoRefBuildPublishConfig("v1.0.4-cs.2", BuildConfig.DEBUG_RELEASE),
         "magic_enum": RepoRefBuildPublishConfig(
             "v0.9.8-cs.2", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
         ),
         "libassert": RepoRefBuildPublishConfig("v2.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
-        "tclap": RepoRefBuildPublishConfig("v1.0.0-rc2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tclap": RepoRefBuildPublishConfig("v1.0.0-rc3", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "Catch2": RepoRefBuildPublishConfig("v3.16.1-cs.2", BuildConfig.DEBUG_RELEASE),
-        "NamedType": RepoRefBuildPublishConfig("v1.1.0-rc2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "NamedType": RepoRefBuildPublishConfig("v1.1.0-rc3", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-optional": RepoRefBuildPublishConfig("v1.1.0-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-expected": RepoRefBuildPublishConfig("v1.3.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
