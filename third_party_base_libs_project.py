@@ -15,6 +15,7 @@ from csorchestrator.application.recipes.repos_config import (
     RepoRefBuildPublishConfig,
     RepoRefBuildPublishConfigDict,
 )
+from csorchestrator.domain.orchestrator.workflow_config import Cron, DayOfWeek
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
@@ -61,6 +62,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     o = create_default_orchestrator_and_default_checkout_build_upload(
         name="third_party_base_libs",
+        # staggered weekly run (UTC), one project at a time in the build-train order (no shared runners)
+        schedule=Cron.weekly(DayOfWeek.MON, hour=0, minute=45),
         version="0.1.0",
         base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
