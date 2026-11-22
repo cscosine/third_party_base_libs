@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "third_party_base_libs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Eigen, fmt, cpptrace, libassert, magic_enum, Catch2, ... built for every platform"
 authors = [
   { name = "cscosine-dev", email = "cscosine@gmail.com" }
