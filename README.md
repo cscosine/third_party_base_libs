@@ -19,7 +19,7 @@ source .venv/bin/activate     # Windows: .\.venv\Scripts\Activate.ps1
 `setup.sh` creates `.venv`, installs the project with its development tools and csorchestrator, and installs the
 pre-commit hooks.
 
-csorchestrator: `setup.sh` installs the pinned version (v0.1.0). Another one:
+csorchestrator: `setup.sh` installs the pinned version (v0.1.2). Another one:
 `./setup.sh --csorchestrator=<tag or branch>`; a local clone, editable: `./setup.sh --csorchestrator=../csorchestrator`
 (Windows: `.\setup.ps1 -CsOrchestrator <...>`).
 
@@ -37,7 +37,7 @@ Generated files, never edited by hand:
 | `.github/workflows/third_party_base_libs.yml` | `third_party_base_libs_project.py generate-github-workflow` | Edit the recipe, then regenerate |
 | `csorchestratorsdk/` | csorchestrator, at the same command | The release-manifest helpers the CI runs, without installing csorchestrator |
 | `dependencies/` | csorchestrator, at the same command | The manifests and recipes of the releases this project builds on |
-| `workspace/` *(git-ignored)* | a local run of `third_party_base_libs_project.py` | Sources, builds, installs, deploy archives; delete it to start clean |
+| `_csw/` *(git-ignored)* | a local run of `third_party_base_libs_project.py` | Sources, builds, installs, deploy archives; delete it to start clean |
 
 Checks and tests:
 
@@ -49,6 +49,41 @@ pytest                        # --run-all: every test, as CI; --run=<marker>: an
 The shared files (setup, checks, CI, agent rules) come from
 [cs-project-template](https://github.com/cscosine/cs-project-template); to bring them to its latest version, on a
 branch: `copier update --defaults`.
+
+## Working in VS Code
+
+`./open-code.sh [filter]` (Windows: `.\open-code.ps1 [filter]`) opens VS Code with the venv active. When the project has
+C++ sources of its own (a `CMakeLists.txt` and a `csCMakeProjectSetup.json`), it attaches the window to one of their
+builds, made by a local run of the recipe (`python third_party_base_libs_project.py`); before the first build it opens a
+Python-only window. Without C++ sources it opens the folder.
+The filter is a part of the build folder name or of the compiler (`gcc`, `clang`, `msvc`, `clang-cl`),
+needed when there are several builds.
+
+The script writes a **workspace file** for the chosen build, `<build>/third_party_base_libs.code-workspace`, and opens it
+(not the folder): it holds the build's settings (build folder, configurations, IntelliSense, debugger). The window title
+shows `third_party_base_libs - <build>`. To come back: run the script again, or File > Open Recent and pick that
+workspace. Opening the folder itself (`code .`) gives a window without the build: CMake Tools would ask for a kit and
+configure a new build of its own. Each build has its own workspace file and window, so gcc and clang can be open side
+by side. The builds are found from the csCMake layout of `csCMakeProjectSetup.json`; CMake is the one that made the
+build (its path is in the build's `CMakeCache.txt`).
+
+Needs VS Code with its `code` command on the PATH (the Linux packages and the Windows installer add it; otherwise the
+script says which file to open by hand) and, on Linux, gdb to debug.
+
+The first time in a window (VS Code remembers it):
+
+1. CMake Tools asks "Select a kit": pick **`[Unspecified]`**, the build keeps its own compiler. CMake Tools then
+   configures (Output, CMake).
+2. Linux: clangd asks to install itself, or to disable the other IntelliSense: yes. Windows (Visual Studio builds):
+   nothing to do, IntelliSense comes from CMake Tools.
+
+Every day:
+
+- The configuration (those of the build) and Build (F7): the status bar.
+- Tests: the Testing view (Catch2: one entry per test case), run or debug one.
+- The launch target (status bar): Run and Debug, "Debug the launch target" (F5, it builds first); with Catch2 also
+  "Debug the launch target (Catch2 test spec)" (a test name or a `[tag]`).
+- Install (for the next libraries, the deployments): command palette, "CMake: Install".
 <!-- cs-template:end -->
 
 ## Overview
@@ -74,10 +109,10 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 1. **Repos Self Checkout & Update**:
    - Performs a shallow (`depth=1`) self-checkout of this repository so release assembly runs on the runner.
-   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc8`) and unpacks it into `workspace/csCMake`, where the presets of the libraries find it (sibling layout).
+   - Downloads the csCMake release package pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`cscmake_version`, e.g. `1.0.0-rc8`) and unpacks it into `_csw/csCMake`, where the presets of the libraries find it (sibling layout).
 2. **Checkout & Build each library**: for every repository configured in [`third_party_base_libs_project.py`](third_party_base_libs_project.py):
-   - Clones or pulls the repository into `workspace/<repo>` at the configured ref (a tag of each library).
-   - Configures, builds, and installs the library into `workspace/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
+   - Clones or pulls the repository into `_csw/<repo>` at the configured ref (a tag of each library).
+   - Configures, builds, and installs the library into `_csw/install/<variant>/<repo>` using the per-repository `BuildConfig` (e.g. `RELEASE`, `DEBUG_RELEASE`).
 3. **Get Versions**:
    - Reads each installed library's package version (CMakeConfig package) and writes a per-variant `.csorchestratorManifest`.
 4. **Create Archives**:
@@ -164,17 +199,17 @@ graph TD
 
 | Edge | Kind | Evidence |
 |---|---|---|
-| `fmt-eigen` → `eigen3` | link | [`workspace/fmt-eigen/fmt-eigen/CMakeLists.txt`](workspace/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
+| `fmt-eigen` → `eigen3` | link | [`_csw/fmt-eigen/fmt-eigen/CMakeLists.txt`](_csw/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
 | `fmt-eigen` → `fmt` | link | same file: `cs_find_package(... fmt REQUIRED CONFIG)`, links `fmt::fmt`; re-declared via `find_dependency(fmt)` in `fmt-eigenConfig.cmake` |
-| `libassert` → `cpptrace` | link | [`workspace/libassert/CMakeLists.txt`](workspace/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
-| `tl-optional` → `Catch2` | **tests only** | [`workspace/tl-optional/CMakeLists.txt`](workspace/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
-| `tl-expected` → `Catch2` | **tests only** | [`workspace/tl-expected/CMakeLists.txt`](workspace/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
+| `libassert` → `cpptrace` | link | [`_csw/libassert/CMakeLists.txt`](_csw/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
+| `tl-optional` → `Catch2` | **tests only** | [`_csw/tl-optional/CMakeLists.txt`](_csw/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
+| `tl-expected` → `Catch2` | **tests only** | [`_csw/tl-expected/CMakeLists.txt`](_csw/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 
 **Notes:**
 
 - **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
-- **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `workspace/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
-- **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`workspace/libassert/include/libassert/stringification.hpp`](workspace/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
+- **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `_csw/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
+- **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`_csw/libassert/include/libassert/stringification.hpp`](_csw/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
 - `cpptrace` statically bundles `zstd` and `libdwarf` (via `FetchContent`) for stacktrace symbolization — visible as `libzstd.a` / `libdwarf.a` in its install output; these are *not* separate entries in the recipe.
 - Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `NamedType`, `tl-optional`, `tl-expected`.
 

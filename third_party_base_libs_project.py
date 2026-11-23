@@ -28,9 +28,9 @@ from csorchestrator.portable.release_manifest import PublishPackageMode
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
 
-    base_target_dir = Path("workspace")
+    base_target_dir = Path("_csw")
     base_install_dir = base_target_dir / Path("install")
-    cscmake_version = "1.0.0"
+    cscmake_version = "1.1.0"
 
     # every library by tag: the forks v<upstream>-cs.<n>, the copies of our own their semver (FORKS.md)
     repos: RepoRefBuildPublishConfigDict = {

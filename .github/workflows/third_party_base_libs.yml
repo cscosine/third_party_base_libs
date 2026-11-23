@@ -366,93 +366,93 @@ jobs:
     steps:
     - name: Repo git self-checkout
       uses: actions/checkout@v6
-    - name: csCMake v1.0.0 release download tar.gz
+    - name: csCMake v1.1.0 release download tar.gz
       uses: robinraju/release-downloader@v1.13
       with:
         repository: cscosine/csCMake
-        tag: v1.0.0
-        fileName: csCMake-1.0.0.tar.gz
-        out-file-path: workspace
-    - name: csCMake v1.0.0 release extract tar.gz
+        tag: v1.1.0
+        fileName: csCMake-1.1.0.tar.gz
+        out-file-path: _csw
+    - name: csCMake v1.1.0 release extract tar.gz
       run: |-
-        tar -xzf workspace/csCMake-1.0.0.tar.gz -C workspace
-        rm -f workspace/csCMake-1.0.0.tar.gz
+        tar -xzf _csw/csCMake-1.1.0.tar.gz -C _csw
+        rm -f _csw/csCMake-1.1.0.tar.gz
       shell: bash
     - name: eigen3 Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/eigen3.git
-        path: workspace/eigen3
+        path: _csw/eigen3
         ref: v5.0.1-cs.2
         fetch-depth: '1'
     - name: fmt Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt.git
-        path: workspace/fmt
+        path: _csw/fmt
         ref: v12.2.1-cs.2
         fetch-depth: '1'
     - name: fmt-eigen Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/fmt-eigen.git
-        path: workspace/fmt-eigen
+        path: _csw/fmt-eigen
         ref: v1.0.0
         fetch-depth: '1'
     - name: cpptrace Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/cpptrace.git
-        path: workspace/cpptrace
+        path: _csw/cpptrace
         ref: v1.0.4-cs.2
         fetch-depth: '1'
     - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/magic_enum.git
-        path: workspace/magic_enum
+        path: _csw/magic_enum
         ref: v0.9.8-cs.2
         fetch-depth: '1'
     - name: libassert Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/libassert.git
-        path: workspace/libassert
+        path: _csw/libassert
         ref: v2.2.1-cs.2
         fetch-depth: '1'
     - name: tclap Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tclap.git
-        path: workspace/tclap
+        path: _csw/tclap
         ref: v1.0.0
         fetch-depth: '1'
     - name: Catch2 Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/Catch2.git
-        path: workspace/Catch2
+        path: _csw/Catch2
         ref: v3.16.1-cs.2
         fetch-depth: '1'
     - name: NamedType Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/NamedType.git
-        path: workspace/NamedType
+        path: _csw/NamedType
         ref: v1.1.0
         fetch-depth: '1'
     - name: tl-optional Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-optional.git
-        path: workspace/tl-optional
+        path: _csw/tl-optional
         ref: v1.1.0-cs.2
         fetch-depth: '1'
     - name: tl-expected Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/tl-expected.git
-        path: workspace/tl-expected
+        path: _csw/tl-expected
         ref: v1.3.1-cs.2
         fetch-depth: '1'
     - name: cmake workflow on eigen3 CMake Workflow for config(s) release
@@ -467,7 +467,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/eigen3
+      working-directory: _csw/eigen3
     - name: cmake workflow on fmt CMake Workflow for config(s) debug-release
       run: |-
         set -e
@@ -481,7 +481,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/fmt
+      working-directory: _csw/fmt
     - name: cmake workflow on fmt-eigen CMake Workflow for config(s) release
       run: |-
         set -e
@@ -494,7 +494,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/fmt-eigen
+      working-directory: _csw/fmt-eigen
     - name: cmake workflow on cpptrace CMake Workflow for config(s) debug-release
       run: |-
         set -e
@@ -508,7 +508,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/cpptrace
+      working-directory: _csw/cpptrace
     - name: cmake workflow on magic_enum CMake Workflow for config(s) debug-release
       run: |-
         set -e
@@ -522,7 +522,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/magic_enum
+      working-directory: _csw/magic_enum
     - name: cmake workflow on libassert CMake Workflow for config(s) debug-release
       run: |-
         set -e
@@ -536,7 +536,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/libassert
+      working-directory: _csw/libassert
     - name: cmake workflow on tclap CMake Workflow for config(s) release
       run: |-
         set -e
@@ -549,7 +549,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/tclap
+      working-directory: _csw/tclap
     - name: cmake workflow on Catch2 CMake Workflow for config(s) debug-release
       run: |-
         set -e
@@ -563,7 +563,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/Catch2
+      working-directory: _csw/Catch2
     - name: cmake workflow on NamedType CMake Workflow for config(s) release
       run: |-
         set -e
@@ -576,7 +576,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/NamedType
+      working-directory: _csw/NamedType
     - name: cmake workflow on tl-optional CMake Workflow for config(s) release
       run: |-
         set -e
@@ -589,7 +589,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/tl-optional
+      working-directory: _csw/tl-optional
     - name: cmake workflow on tl-expected CMake Workflow for config(s) release
       run: |-
         set -e
@@ -602,7 +602,7 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: workspace/tl-expected
+      working-directory: _csw/tl-expected
     - name: Get Versions
       run: |-
         import sys
@@ -615,12 +615,12 @@ jobs:
         repos_config_file_list = []
         repos_auto_search_list = ['eigen3', 'fmt', 'fmt-eigen', 'cpptrace', 'magic_enum', 'libassert', 'tclap', 'Catch2', 'NamedType', 'tl-optional', 'tl-expected']
         repos_version = []
-        base_install_dir = Path('workspace/install')
+        base_install_dir = Path('_csw/install')
         install_subdir = Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}')
         variant_string = 'csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'
         project_name = 'third_party_base_libs'
         project_version = '0.1.0'
-        output_file = Path('workspace/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
+        output_file = Path('_csw/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
 
         errors_list = get_package_versions_and_write_single_variant_manifest(
             repos_config_file_list=repos_config_file_list,
@@ -651,10 +651,10 @@ jobs:
             load_release_manifest_single_variant_and_prepare_archive,
         )
 
-        input_full_path = Path('workspace/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
+        input_full_path = Path('_csw/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
         project_name_and_version = 'third_party_base_libs-0.1.0'
         context_os_architecture_compiler_generator_string = 'csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'
-        input_base_dir = Path('workspace/install')
+        input_base_dir = Path('_csw/install')
 
         errors_list = load_release_manifest_single_variant_and_prepare_archive(
             input_full_path=input_full_path,
@@ -675,6 +675,6 @@ jobs:
       with:
         name: third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}
         path: |-
-          workspace/install/*.tar.gz
-          workspace/install/*.csOrchestratorManifest
+          _csw/install/*.tar.gz
+          _csw/install/*.csOrchestratorManifest
         overwrite: true
