@@ -37,7 +37,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "eigen3": RepoRefBuildPublishConfig("v5.0.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "fmt": RepoRefBuildPublishConfig("v12.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "cpptrace": RepoRefBuildPublishConfig("v1.0.4-cs.2", BuildConfig.DEBUG_RELEASE),
+        "zstd": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
+        "cpptrace": RepoRefBuildPublishConfig("feature/new-libs", BuildConfig.DEBUG_RELEASE),
         "magic_enum": RepoRefBuildPublishConfig(
             "v0.9.8-cs.2", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
         ),
@@ -53,18 +54,12 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "concurrentqueue": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "unordered_dense": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "nanobench": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "spdlog": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
+        "tracy": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
     }
 
     # TEMPORARY (feature/new-libs, TODO.md 2.1): only the group under test and what it needs, so CI is short
-    new_libs_group = {
-        "Catch2",
-        "nlohmann_json",
-        "tomlplusplus",
-        "CLI11",
-        "concurrentqueue",
-        "unordered_dense",
-        "nanobench",
-    }
+    new_libs_group = {"fmt", "zstd", "cpptrace", "libassert", "spdlog", "tracy"}  # group N2
     repos = {name: config for name, config in repos.items() if name in new_libs_group}
 
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
@@ -76,6 +71,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     dependencies: dict[str, set[str]] = {
         "fmt-eigen": {"eigen3", "fmt"},
         "libassert": {"cpptrace"},
+        "cpptrace": {"zstd"},
+        "spdlog": {"fmt"},
         "CLI11": {"Catch2"},
     }
     # TEMPORARY (feature/new-libs): the dependencies of the group only
