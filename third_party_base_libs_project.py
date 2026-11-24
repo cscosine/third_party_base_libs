@@ -47,7 +47,25 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "NamedType": RepoRefBuildPublishConfig("v1.1.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-optional": RepoRefBuildPublishConfig("v1.1.0-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-expected": RepoRefBuildPublishConfig("v1.3.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "nlohmann_json": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "tomlplusplus": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "CLI11": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "concurrentqueue": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "unordered_dense": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "nanobench": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
+
+    # TEMPORARY (feature/new-libs, TODO.md 2.1): only the group under test and what it needs, so CI is short
+    new_libs_group = {
+        "Catch2",
+        "nlohmann_json",
+        "tomlplusplus",
+        "CLI11",
+        "concurrentqueue",
+        "unordered_dense",
+        "nanobench",
+    }
+    repos = {name: config for name, config in repos.items() if name in new_libs_group}
 
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
     # (arm64, Apple Clang; Ninja Multi-Config and Xcode)
@@ -58,7 +76,10 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     dependencies: dict[str, set[str]] = {
         "fmt-eigen": {"eigen3", "fmt"},
         "libassert": {"cpptrace"},
+        "CLI11": {"Catch2"},
     }
+    # TEMPORARY (feature/new-libs): the dependencies of the group only
+    dependencies = {name: deps for name, deps in dependencies.items() if name in repos}
 
     o = create_default_orchestrator_and_default_checkout_build_upload(
         name="third_party_base_libs",

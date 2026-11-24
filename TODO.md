@@ -125,6 +125,92 @@ absolute path, no Homebrew; system libraries: `dl` (Linux), zlib (Linux, macOS, 
       NamedType (fine, upstream almost frozen). Dropped: pipes (2026-11-16: no upstream release, unmaintained, no
       consumer but the csCore wrapper; a nice API idea, https://github.com/joboccara/pipes; C++20 ranges cover it).
 
+### 2.1 Libraries to add (chosen 2026-11-24)
+
+From the shortlist: spdlog, CLI11, nlohmann/json, toml++, concurrentqueue, unordered_dense, zstd, stb_image, a
+binary serialization library, nanobench, Tracy (the client), plus nanobind (Python bindings, 2.2). Not now: lz4,
+GSL.
+
+Every library is a repository `cscosine/<recipe key>` (csorchestrator clones `git@github.com:cscosine/<repo>.git`,
+the organisation is fixed): a fork of upstream (`main` = the upstream release tag + our commits, as the other forks,
+`cs-fork-sync`), Actions disabled. Our commits, one per reason: the csCMake presets (`CMakePresets.json`,
+`csCMakeProjectSetup.json`); the tests offline (the Catch2 of this project, no `FetchContent`) or off; `cscosine/`
+(README, CHANGELOG). Tag `v<upstream>-cs.1` once a release of this project built it.
+
+| Recipe key | Upstream | Version | Licence | Kind | Notes |
+|---|---|---|---|---|---|
+| `nlohmann_json` | nlohmann/json | v3.12.0 | MIT | header-only | tests need a test-data download: off |
+| `tomlplusplus` | marzer/tomlplusplus | v3.5.1 | MIT | header-only | |
+| `CLI11` | CLIUtils/CLI11 | v2.7.2 | BSD-3-Clause | header-only | tests on Catch2 |
+| `concurrentqueue` | cameron314/concurrentqueue | v1.0.5 | BSD-2 / Boost | header-only | |
+| `unordered_dense` | martinus/unordered_dense | v5.3.3 | MIT | header-only | |
+| `nanobench` | martinus/nanobench | v4.6.0 | MIT | header-only | |
+| `zstd` | facebook/zstd | v1.6.0 | BSD-3-Clause | compiled (static) | the root `CMakeLists.txt` wraps `build/cmake`; programs, contrib, shared off |
+| `libdwarf` | jeremy-rifkin/libdwarf-lite | the commit cpptrace pins (v2.1.0) | LGPL-2.1 | compiled (static) | only if cpptrace needs it out (below) |
+| `spdlog` | gabime/spdlog | v1.17.0 | MIT | compiled | `SPDLOG_FMT_EXTERNAL` on our fmt |
+| `tracy` | wolfpld/tracy | v0.15.0 | BSD-3-Clause | compiled (client) | the client library only (`Tracy::TracyClient`); a consumer turns it on with `TRACY_ENABLE`. The viewer is not built here: prebuilt in the upstream release (Linux, macOS, Windows), same version as the client (the protocol must match) |
+| `nanobind` | wjakob/nanobind | v3.1.0 | BSD-3-Clause | sources + CMake | submodule `ext/robin_map`: csorchestrator does not clone submodules, our commit vendors it |
+| `stb` | nothings/stb | master (no releases) | MIT / public domain | header-only | no CMake: our `CMakeLists.txt` (target `stb::stb`, images only); own semver as tclap |
+| `bitsery` | fraillt/bitsery | v5.2.5 | MIT | header-only | not zpp_bits: it needs C++20, the projects are C++17 |
+
+cpptrace on the packages of this project instead of its `FetchContent` copies (one zstd, no hidden packages):
+
+- zstd: `CPPTRACE_USE_EXTERNAL_ZSTD=ON` in the cpptrace fork, the recipe dependency `cpptrace: {zstd}`. Check: libdwarf
+  includes `${zstd_SOURCE_DIR}/lib` (empty with an external zstd: it must get the headers from the zstd target); the
+  installed `cpptrace-config.cmake` already calls `find_dependency(zstd)` through cpptrace's `Findzstd.cmake`, which
+  must find our package.
+- libdwarf, if needed (or to drop the `find_dependency(libdwarf)` hint to the copy inside the cpptrace package in our
+  `cpptrace-config-cmake.in`): the fork `libdwarf`, `CPPTRACE_USE_EXTERNAL_LIBDWARF=ON`, dependencies
+  `libdwarf: {zstd}`, `cpptrace: {zstd, libdwarf}`. libassert: rebuilt, no change.
+
+How, a group at a time on `feature/new-libs` (here and in the forks touched): the recipe lists only the group and
+what it depends on (the other libraries removed for the run, so CI is short), the forks at `main`; CI on demand
+(`gh workflow run third_party_base_libs.yml --ref feature/new-libs`); green: the next group. At the end every library
+back in the recipe, the new forks by tag, one commit here; `version` 0.1.1.
+
+| Group | Libraries (+ for the run) | Status |
+|---|---|---|
+| N1 | nlohmann_json, tomlplusplus, CLI11 (+ Catch2), concurrentqueue, unordered_dense, nanobench | todo |
+| N2 | zstd, then cpptrace on it (+ libdwarf if needed; + libassert), spdlog (+ fmt), tracy | todo |
+| N3 | nanobind, stb, bitsery | todo |
+| N4 | the full recipe, every configuration; release; the consumers (csfoundation first) | todo |
+| N5 | the Tracy viewer and `tracy-capture` (optional, see below) | later |
+
+N5, the Tracy viewer (kept out for now): the upstream release has prebuilt tools (Linux x64, macOS, Windows), but
+the Linux ones need glibc 2.38 (checked on v0.15.0: `tracy-capture`, `tracy-csvexport`, …; the viewer is an
+AppImage, not checked) and so do not run on Ubuntu 22.04; no Linux arm64 build. Building them here would cover every
+supported system with the version of the client. Cost: a GUI application with system packages on the Linux runners
+(Wayland, xkbcommon, EGL, dbus, freetype; or X11 with glfw, its legacy mode) and `CPM` downloads at configure
+(ImGui, capstone, …). If done: a deployment of the `tracy` fork, Release only, one variant per system and
+architecture, a `--help` smoke run, after the libraries are green. Until then: the upstream viewer of the same
+version as the client, where it runs (Ubuntu ≥ 24.04, macOS, Windows).
+
+### 2.2 Python bindings (plan, not started)
+
+- Here: nanobind as a package (headers, its sources, `nanobind-config.cmake`); building it needs no Python
+  (`NB_TEST` off).
+- A consumer: `find_package(Python 3.12 COMPONENTS Interpreter Development.Module REQUIRED)`,
+  `find_package(nanobind CONFIG REQUIRED)`, `nanobind_add_module(<name> STABLE_ABI NB_STATIC <sources>)`. Eigen
+  ↔ NumPy through `nanobind/eigen/dense.h`. With `STABLE_ABI` one module serves every Python ≥ 3.12.
+- csCMake: `cs_add_python_module(<name> SOURCES … LINK …)` around `nanobind_add_module` (the compile profiles of
+  csCMake, install into a Python package folder of the project's layout), `cs_find_package(nanobind)` as the other
+  packages. Generic: no project names.
+- csorchestrator: Python (with its headers) on every variant of a project that builds bindings (setup-python on the
+  runners), a smoke test `python -c "import <module>"` from the archive.
+- Wheels (pip install): scikit-build-core in the `pyproject.toml` of the project that ships them, cibuildwheel in its
+  CI; a separate decision (the archives of csorchestrator stay the C++ delivery).
+- To decide: which libraries first (csLie, csCamera: Eigen in, Eigen out), the minimum Python (3.12 for the stable
+  ABI), where the binding code lives (a `python/` folder in each library, or one project of bindings).
+
+### 2.3 Libraries to drop, after their consumers move
+
+- tl-optional: used by csCore (`language/Optional.hpp`, its tests `language/tests/optional`). csCore moves to
+  `std::optional` (check for `optional<T&>` and the monadic functions `map` / `and_then` / `or_else` in csCore and
+  its consumers), `tl-optional` out of csCore's CMake and of `csfoundation_config.py`, released through csfoundation;
+  then dropped here (csfoundation pins a release of this project, so the order is safe).
+- tclap: used by csSkiTracker (`skiTrackerApp/CommandLineOptions.cpp`, its CMake, `csSkiTracker_config.py`). Moves to
+  CLI11 once a release of this project has CLI11; then tclap dropped here.
+
 ## 3. New configurations: Ubuntu 26.04, macOS
 
 Branch `feature/ubuntu26mac` (here, csorchestrator, eigen3, fmt; csCMake: no change, 1.0.0-rc1 already has every
