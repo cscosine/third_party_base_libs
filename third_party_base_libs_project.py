@@ -32,16 +32,14 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_install_dir = base_target_dir / Path("install")
     cscmake_version = "1.1.0"
 
-    # every library by tag: the forks v<upstream>-cs.<n>, the copies of our own their semver (FORKS.md)
+    # every library by tag: the forks v<upstream>-cs.<n>, the copies of our own their semver (README.md)
     repos: RepoRefBuildPublishConfigDict = {
         "eigen3": RepoRefBuildPublishConfig("v5.0.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "fmt": RepoRefBuildPublishConfig("v12.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "zstd": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
-        "cpptrace": RepoRefBuildPublishConfig("feature/new-libs", BuildConfig.DEBUG_RELEASE),
-        "magic_enum": RepoRefBuildPublishConfig(
-            "sync/v0.10.0", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
-        ),
+        "cpptrace": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
+        "magic_enum": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY),
         "libassert": RepoRefBuildPublishConfig("v2.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "tclap": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "Catch2": RepoRefBuildPublishConfig("v3.16.1-cs.2", BuildConfig.DEBUG_RELEASE),

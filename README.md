@@ -122,25 +122,57 @@ The project version (`0.1.0`) is defined both in [`third_party_base_libs_project
 
 ### Included Libraries
 
-Each library is built from a tag of `cscosine/<repo>`, pinned in
-[`third_party_base_libs_project.py`](third_party_base_libs_project.py). Most are forks (`main`: an upstream release +
-our commits, the csCMake integration and compiler fixes; tags `v<upstream>-cs.<n>`); fmt-eigen, tclap and NamedType
-are copies of our own (upstream inactive; tagged with their own version). The version below is the one of the
-installed CMake package.
+Each library is built from `cscosine/<repo>`, pinned in [`third_party_base_libs_project.py`](third_party_base_libs_project.py)
+(a tag once a release of this project built it). Most are forks: `main` is an upstream release (stb: upstream
+`master`, it has no releases) plus our commits, one per reason (the csCMake presets, tests offline or off, compiler
+fixes), listed in the fork's `cscosine/README.md`; tags `v<upstream>-cs.<n>`; syncing with a new upstream release: the
+`cs-fork-sync` skill. fmt-eigen, tclap and NamedType are copies of our own (upstream inactive) and stb a package of
+ours around upstream headers: they carry versions of our own. Our fixes stay ours (no pull requests upstream). The
+version below is the one of the installed CMake package.
 
-| Repository | Version | Upstream | BuildConfig |
-|---|---|---|---|
-| eigen3 | 5.0.1 | [libeigen/eigen](https://gitlab.com/libeigen/eigen) | `RELEASE` |
-| fmt | 12.2.1 | [fmtlib/fmt](https://github.com/fmtlib/fmt) | `DEBUG_RELEASE` |
-| fmt-eigen | 1.0.0 | (no releases; author Yunfan REN) | `RELEASE` |
-| cpptrace | 1.0.4 | [jeremy-rifkin/cpptrace](https://github.com/jeremy-rifkin/cpptrace) | `DEBUG_RELEASE` |
-| magic_enum | 0.9.8 | [Neargye/magic_enum](https://github.com/Neargye/magic_enum) | `DEBUG_RELEASE` |
-| libassert | 2.2.1 | [jeremy-rifkin/libassert](https://github.com/jeremy-rifkin/libassert) | `DEBUG_RELEASE` |
-| tclap | 1.0.0 | (SourceForge; version of our own) | `RELEASE` |
-| Catch2 | 3.16.1 | [catchorg/Catch2](https://github.com/catchorg/Catch2) | `DEBUG_RELEASE` |
-| NamedType | 1.1.0 | [joboccara/NamedType](https://github.com/joboccara/NamedType) | `RELEASE` |
-| tl-optional | 1.1.0 | [TartanLlama/optional](https://github.com/TartanLlama/optional) | `RELEASE` |
-| tl-expected | 1.3.1 | [TartanLlama/expected](https://github.com/TartanLlama/expected) | `RELEASE` |
+| Repository | Version | Upstream | Licence | Kind | BuildConfig |
+|---|---|---|---|---|---|
+| eigen3 | 5.0.1 | [libeigen/eigen](https://gitlab.com/libeigen/eigen) | MPL-2.0 | header-only | `RELEASE` |
+| fmt | 12.2.1 | [fmtlib/fmt](https://github.com/fmtlib/fmt) | MIT | compiled | `DEBUG_RELEASE` |
+| fmt-eigen | 1.0.0 | (no releases; author Yunfan REN) | MIT | header-only | `RELEASE` |
+| zstd | 1.6.0 | [facebook/zstd](https://github.com/facebook/zstd) | BSD-3-Clause | compiled (static) | `DEBUG_RELEASE` |
+| cpptrace | 1.0.4 | [jeremy-rifkin/cpptrace](https://github.com/jeremy-rifkin/cpptrace) | MIT | compiled | `DEBUG_RELEASE` |
+| libassert | 2.2.1 | [jeremy-rifkin/libassert](https://github.com/jeremy-rifkin/libassert) | MIT | compiled | `DEBUG_RELEASE` |
+| magic_enum | 0.10.0 | [Neargye/magic_enum](https://github.com/Neargye/magic_enum) | MIT | header-only | `DEBUG_RELEASE` |
+| Catch2 | 3.16.1 | [catchorg/Catch2](https://github.com/catchorg/Catch2) | BSL-1.0 | compiled | `DEBUG_RELEASE` |
+| tclap | 1.0.0 | (SourceForge; version of our own) | MIT | header-only | `RELEASE` |
+| NamedType | 1.1.0 | [joboccara/NamedType](https://github.com/joboccara/NamedType) | MIT | header-only | `RELEASE` |
+| tl-optional | 1.1.0 | [TartanLlama/optional](https://github.com/TartanLlama/optional) | CC0-1.0 | header-only | `RELEASE` |
+| tl-expected | 1.3.1 | [TartanLlama/expected](https://github.com/TartanLlama/expected) | CC0-1.0 | header-only | `RELEASE` |
+| nlohmann_json | 3.12.0 | [nlohmann/json](https://github.com/nlohmann/json) | MIT | header-only | `RELEASE` |
+| tomlplusplus | 3.5.1 | [marzer/tomlplusplus](https://github.com/marzer/tomlplusplus) | MIT | header-only | `RELEASE` |
+| CLI11 | 2.7.2 | [CLIUtils/CLI11](https://github.com/CLIUtils/CLI11) | BSD-3-Clause | header-only | `RELEASE` |
+| concurrentqueue | 1.0.5 | [cameron314/concurrentqueue](https://github.com/cameron314/concurrentqueue) | BSD-2-Clause / BSL-1.0 | header-only | `RELEASE` |
+| unordered_dense | 5.3.3 | [martinus/unordered_dense](https://github.com/martinus/unordered_dense) | MIT | header-only | `RELEASE` |
+| nanobench | 4.6.0 | [martinus/nanobench](https://github.com/martinus/nanobench) | MIT | header-only | `RELEASE` |
+| spdlog | 1.17.0 | [gabime/spdlog](https://github.com/gabime/spdlog) | MIT | compiled | `DEBUG_RELEASE` |
+| tracy | 0.15.0 | [wolfpld/tracy](https://github.com/wolfpld/tracy) | BSD-3-Clause | compiled (client) | `DEBUG_RELEASE` |
+| nanobind | 3.1.0 | [wjakob/nanobind](https://github.com/wjakob/nanobind) | BSD-3-Clause | sources + CMake | `RELEASE` |
+| stb | 1.0.0 | [nothings/stb](https://github.com/nothings/stb) (version of our own) | MIT / public domain | header-only | `RELEASE` |
+| bitsery | 5.2.5 | [fraillt/bitsery](https://github.com/fraillt/bitsery) | MIT | header-only | `RELEASE` |
+
+What we build and what we leave to upstream:
+
+- **Configurations**: Debug and Release only (`DEBUG_RELEASE` for the compiled libraries, `RELEASE` for the header-only
+  ones). The other configurations of the csCMake projects (e.g. paranoid, sanitizers) are theirs: they link the
+  Release or Debug build of these libraries.
+- **Compiled forks**: position independent code (linked into shared libraries) and the Debug postfix `d`, set in each
+  fork (its `csCMakeProjectSetup.json` or its own options); macOS 13.3 as deployment target, recorded in the package
+  (`share/cscmake/`).
+- **Tests**: upstream's tests run where they build offline (with the Catch2 of this project, no downloads), off
+  otherwise (nlohmann_json, nanobind); none of ours, except the smoke test of the stb package. Build warnings, header
+  self-containment and the code are upstream's.
+- **Notes per library**: spdlog on our fmt (`SPDLOG_FMT_EXTERNAL`); tracy: the client library only
+  (`Tracy::TracyClient`, profiling on demand), the viewer is the upstream release of the same version (the protocol
+  must match); nanobind: the package is its headers, sources and `nanobind-config.cmake`, compiled by the consumer,
+  which calls `find_package(Python … Development.Module)` first (its `ext/robin_map` is vendored in the fork:
+  csorchestrator does not clone submodules); stb: `stb::stb` with `stb_image.h` and `stb_image_write.h` only, one
+  source of the consumer defines the `*_IMPLEMENTATION` macros; bitsery rather than zpp_bits (C++20).
 
 ### Library Dependency Graph
 
@@ -161,38 +193,42 @@ graph TD
     subgraph dependents["Dependent libraries"]
         fmt_eigen["fmt-eigen"]
         libassert["libassert"]
+        spdlog["spdlog"]
     end
 
     subgraph link_deps["Link-time dependencies"]
         eigen3["eigen3"]
         fmt["fmt"]
         cpptrace["cpptrace"]
+        zstd["zstd"]
     end
 
     subgraph test_users["Test-only consumers"]
         tl_optional["tl-optional"]
         tl_expected["tl-expected"]
+        cli11["CLI11"]
     end
 
     subgraph foundation["Foundation / standalone"]
         catch2["Catch2"]
-        magic_enum["magic_enum"]
-        namedtype["NamedType"]
-        tclap["tclap"]
+        others["magic_enum, NamedType, tclap, nlohmann_json, tomlplusplus,<br/>concurrentqueue, unordered_dense, nanobench,<br/>tracy, nanobind, stb, bitsery"]
     end
 
     fmt_eigen --> eigen3
     fmt_eigen --> fmt
     libassert --> cpptrace
+    spdlog --> fmt
+    cpptrace --> zstd
 
     tl_optional -. "tests only" .-> catch2
     tl_expected -. "tests only" .-> catch2
+    cli11 -. "tests only" .-> catch2
 
     %% invisible links force each group onto its own row (strict vertical layout)
     dependents ~~~ link_deps ~~~ test_users ~~~ foundation
 
-    class fmt_eigen,libassert consumer;
-    class eigen3,fmt,cpptrace,magic_enum,catch2,namedtype,tclap,tl_optional,tl_expected leaf;
+    class fmt_eigen,libassert,spdlog consumer;
+    class eigen3,fmt,cpptrace,zstd,catch2,others,tl_optional,tl_expected,cli11 leaf;
 ```
 
 **Edge legend:**
@@ -202,16 +238,20 @@ graph TD
 | `fmt-eigen` → `eigen3` | link | [`_csw/fmt-eigen/fmt-eigen/CMakeLists.txt`](_csw/fmt-eigen/fmt-eigen/CMakeLists.txt): `cs_find_package(... Eigen3 REQUIRED CONFIG)`, links `Eigen3::Eigen` |
 | `fmt-eigen` → `fmt` | link | same file: `cs_find_package(... fmt REQUIRED CONFIG)`, links `fmt::fmt`; re-declared via `find_dependency(fmt)` in `fmt-eigenConfig.cmake` |
 | `libassert` → `cpptrace` | link | [`_csw/libassert/CMakeLists.txt`](_csw/libassert/CMakeLists.txt): `target_link_libraries(... PUBLIC cpptrace::cpptrace)`, the cpptrace package of this recipe (`LIBASSERT_USE_EXTERNAL_CPPTRACE` `ON` in the fork: libassert installs itself only, not a copy of cpptrace); exported as `find_dependency(cpptrace REQUIRED)` in `libassert-config.cmake` |
+| `spdlog` → `fmt` | link | the spdlog fork: `SPDLOG_FMT_EXTERNAL` `ON`, links `fmt::fmt`; `find_dependency(fmt)` in `spdlogConfig.cmake` |
+| `cpptrace` → `zstd` | link | the cpptrace fork: `CPPTRACE_USE_EXTERNAL_ZSTD` `ON`, cpptrace and the libdwarf it builds use the zstd package of this recipe; its package config finds `zstd` |
+| `CLI11` → `Catch2` | **tests only** | the CLI11 tests on the Catch2 package (offline) |
 | `tl-optional` → `Catch2` | **tests only** | [`_csw/tl-optional/CMakeLists.txt`](_csw/tl-optional/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 | `tl-expected` → `Catch2` | **tests only** | [`_csw/tl-expected/CMakeLists.txt`](_csw/tl-expected/CMakeLists.txt): `find_package(Catch2 3 REQUIRED CONFIG)` |
 
 **Notes:**
 
-- **Leaf / foundation libraries** (`eigen3`, `fmt`, `cpptrace`, `magic_enum`, `Catch2`, `NamedType`, `tclap`, `tl-optional`, `tl-expected`) have no dependencies on any of the other libraries in this recipe.
+- **Leaf / foundation libraries** (every library outside the "Dependent libraries" group, `cpptrace` apart: it links `zstd`) have no dependencies on any of the other libraries in this recipe.
 - **`csCMake` is intentionally not in the graph**: it is build *tooling* used by the `csCMake`-based repos (`fmt-eigen`, `tclap`) at **configure time** via their `cs_*` macros — it is the release package unpacked in `_csw/csCMake`, not built, and it is **not** a runtime / install-time dependency of any installed library.
 - **`magic_enum` is not an actual dependency of `libassert` in this build.** It is only an *optional, compile-time enhancement* (better enum printing in assertion diagnostics) guarded by `LIBASSERT_USE_MAGIC_ENUM` in [`_csw/libassert/include/libassert/stringification.hpp`](_csw/libassert/include/libassert/stringification.hpp). That macro is only enabled when libassert's tests are built, which is **off** here — the installed `libassert-config.cmake` wraps it in `if(OFF)` and `libassert-targets.cmake` links only `cpptrace::cpptrace`. `cpptrace` itself has **no** reference to `magic_enum` anywhere in its source tree or installed config.
-- `cpptrace` statically bundles `zstd` and `libdwarf` (via `FetchContent`) for stacktrace symbolization — visible as `libzstd.a` / `libdwarf.a` in its install output; these are *not* separate entries in the recipe.
-- Compiled libraries (produce static artifacts): `fmt`, `cpptrace`, `libassert`, `Catch2`. Header-only: `eigen3`, `fmt-eigen`, `magic_enum`, `tclap`, `NamedType`, `tl-optional`, `tl-expected`.
+- `cpptrace` builds `libdwarf` (pinned, `FetchContent` at configure: the network is needed at configure) on the `zstd` package of this recipe and installs it, static, in its package; libdwarf links the **zlib of the system**: the consumers of cpptrace / libassert need `zlib1g-dev` on Linux (macOS: the system zlib; Windows: no libdwarf, `dbghelp`). The other system libraries of the packages: `dl` (Linux). No Homebrew, no absolute paths.
+- Test-only copies inside upstream sources, not shipped: fmt `test/gtest`, magic_enum `test/3rdparty/doctest`.
+- Compiled libraries (static): `fmt`, `zstd`, `cpptrace`, `libassert`, `Catch2`, `spdlog`, `tracy`. The others are header-only (nanobind: sources compiled by the consumer).
 
 ---
 
@@ -285,12 +325,6 @@ This repository includes a project-specific agent skill under [`.claude/skills/`
 * **Explicit Invocation**: Prompt the assistant directly:
   * *"Use the `third_party_base_libs-orchestrator-recipe` skill to audit the build recipe"*
 * **Human Developer Runbook (Standard Operating Procedure / SOP)**: For manual work without an AI assistant, [`.claude/skills/third_party_base_libs-orchestrator-recipe/SKILL.md`](.claude/skills/third_party_base_libs-orchestrator-recipe/SKILL.md) serves as a concise checklist for extra files, version alignment, and workflow re-generation commands.
-
----
-
-## TODO & Future Ideas
-
-- [ ] **Real recipe tests**: Add unit tests covering the repository list, version alignment, and build-matrix invariants (currently only placeholder tests exist).
 
 ---
 

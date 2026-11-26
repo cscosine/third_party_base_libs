@@ -411,14 +411,14 @@ jobs:
       with:
         repository: cscosine/cpptrace.git
         path: _csw/cpptrace
-        ref: feature/new-libs
+        ref: main
         fetch-depth: '1'
     - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
         repository: cscosine/magic_enum.git
         path: _csw/magic_enum
-        ref: sync/v0.10.0
+        ref: main
         fetch-depth: '1'
     - name: libassert Git clone/pull-ff
       uses: actions/checkout@v6
