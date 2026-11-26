@@ -40,7 +40,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "zstd": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
         "cpptrace": RepoRefBuildPublishConfig("feature/new-libs", BuildConfig.DEBUG_RELEASE),
         "magic_enum": RepoRefBuildPublishConfig(
-            "v0.9.8-cs.2", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
+            "sync/v0.10.0", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
         ),
         "libassert": RepoRefBuildPublishConfig("v2.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "tclap": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
@@ -56,10 +56,13 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "nanobench": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "spdlog": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
         "tracy": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
+        "nanobind": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "stb": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "bitsery": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
     # TEMPORARY (feature/new-libs, TODO.md 2.1): only the group under test and what it needs, so CI is short
-    new_libs_group = {"fmt", "zstd", "cpptrace", "libassert", "spdlog", "tracy"}  # group N2
+    new_libs_group = {"nanobind", "stb", "bitsery", "magic_enum"}  # group N3, and magic_enum 0.10.0
     repos = {name: config for name, config in repos.items() if name in new_libs_group}
 
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS

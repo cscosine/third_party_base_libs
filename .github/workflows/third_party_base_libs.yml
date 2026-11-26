@@ -49,9 +49,9 @@ jobs:
         list_additional_files = [Path('third_party_base_libs_config.py')]
         output_folder_additional_files = Path(os.environ["GITHUB_WORKSPACE"]) / Path('generated-for-release')
         output_bundle_file_name = Path('third_party_base_libs-0.1.0-bundle.tar.gz')
-        repo_publish_config_dict = {'fmt': PublishPackageMode.ON_VARIANT, 'zstd': PublishPackageMode.ON_VARIANT, 'cpptrace': PublishPackageMode.ON_VARIANT, 'libassert': PublishPackageMode.ON_VARIANT, 'spdlog': PublishPackageMode.ON_VARIANT, 'tracy': PublishPackageMode.ON_VARIANT}
+        repo_publish_config_dict = {'magic_enum': PublishPackageMode.HEADERS_ONLY, 'nanobind': PublishPackageMode.HEADERS_ONLY, 'stb': PublishPackageMode.HEADERS_ONLY, 'bitsery': PublishPackageMode.HEADERS_ONLY}
         header_only_variants_sources = {'csv1-linux': 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig', 'csv1-windows': 'csv1-windows-v10-x64-generic-msvc-default-msvc2022', 'csv1-macos': 'csv1-macos-macos15-arm64-generic-appleclang-default-ninjamulticonfig'}
-        dependencies = {'libassert': {'cpptrace'}, 'cpptrace': {'zstd'}, 'spdlog': {'fmt'}}
+        dependencies = {}
         dependencies_dev = {}
 
         errors_list = collect_release_manifest_single_variant_and_prepare_manifest(
@@ -378,49 +378,35 @@ jobs:
         tar -xzf _csw/csCMake-1.1.0.tar.gz -C _csw
         rm -f _csw/csCMake-1.1.0.tar.gz
       shell: bash
-    - name: fmt Git clone/pull-ff
+    - name: magic_enum Git clone/pull-ff
       uses: actions/checkout@v6
       with:
-        repository: cscosine/fmt.git
-        path: _csw/fmt
-        ref: v12.2.1-cs.2
+        repository: cscosine/magic_enum.git
+        path: _csw/magic_enum
+        ref: sync/v0.10.0
         fetch-depth: '1'
-    - name: zstd Git clone/pull-ff
+    - name: nanobind Git clone/pull-ff
       uses: actions/checkout@v6
       with:
-        repository: cscosine/zstd.git
-        path: _csw/zstd
+        repository: cscosine/nanobind.git
+        path: _csw/nanobind
         ref: main
         fetch-depth: '1'
-    - name: cpptrace Git clone/pull-ff
+    - name: stb Git clone/pull-ff
       uses: actions/checkout@v6
       with:
-        repository: cscosine/cpptrace.git
-        path: _csw/cpptrace
-        ref: feature/new-libs
-        fetch-depth: '1'
-    - name: libassert Git clone/pull-ff
-      uses: actions/checkout@v6
-      with:
-        repository: cscosine/libassert.git
-        path: _csw/libassert
-        ref: v2.2.1-cs.2
-        fetch-depth: '1'
-    - name: spdlog Git clone/pull-ff
-      uses: actions/checkout@v6
-      with:
-        repository: cscosine/spdlog.git
-        path: _csw/spdlog
+        repository: cscosine/stb.git
+        path: _csw/stb
         ref: main
         fetch-depth: '1'
-    - name: tracy Git clone/pull-ff
+    - name: bitsery Git clone/pull-ff
       uses: actions/checkout@v6
       with:
-        repository: cscosine/tracy.git
-        path: _csw/tracy
+        repository: cscosine/bitsery.git
+        path: _csw/bitsery
         ref: main
         fetch-depth: '1'
-    - name: cmake workflow on fmt CMake Workflow for config(s) debug-release
+    - name: cmake workflow on magic_enum CMake Workflow for config(s) debug-release
       run: |-
         set -e
         if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
@@ -433,77 +419,46 @@ jobs:
           exit 1
         fi
       shell: bash
-      working-directory: _csw/fmt
-    - name: cmake workflow on zstd CMake Workflow for config(s) debug-release
+      working-directory: _csw/magic_enum
+    - name: cmake workflow on nanobind CMake Workflow for config(s) release
       run: |-
         set -e
         if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
           cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         else
           echo "Unknown generator_type: ${{ matrix.generator_type }}"
           exit 1
         fi
       shell: bash
-      working-directory: _csw/zstd
-    - name: cmake workflow on cpptrace CMake Workflow for config(s) debug-release
+      working-directory: _csw/nanobind
+    - name: cmake workflow on stb CMake Workflow for config(s) release
       run: |-
         set -e
         if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
           cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         else
           echo "Unknown generator_type: ${{ matrix.generator_type }}"
           exit 1
         fi
       shell: bash
-      working-directory: _csw/cpptrace
-    - name: cmake workflow on libassert CMake Workflow for config(s) debug-release
+      working-directory: _csw/stb
+    - name: cmake workflow on bitsery CMake Workflow for config(s) release
       run: |-
         set -e
         if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
           cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         else
           echo "Unknown generator_type: ${{ matrix.generator_type }}"
           exit 1
         fi
       shell: bash
-      working-directory: _csw/libassert
-    - name: cmake workflow on spdlog CMake Workflow for config(s) debug-release
-      run: |-
-        set -e
-        if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-        elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-        else
-          echo "Unknown generator_type: ${{ matrix.generator_type }}"
-          exit 1
-        fi
-      shell: bash
-      working-directory: _csw/spdlog
-    - name: cmake workflow on tracy CMake Workflow for config(s) debug-release
-      run: |-
-        set -e
-        if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-        elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-        else
-          echo "Unknown generator_type: ${{ matrix.generator_type }}"
-          exit 1
-        fi
-      shell: bash
-      working-directory: _csw/tracy
+      working-directory: _csw/bitsery
     - name: Get Versions
       run: |-
         import sys
@@ -514,7 +469,7 @@ jobs:
         from csorchestratorsdk.portable.release_manifest import get_package_versions_and_write_single_variant_manifest
 
         repos_config_file_list = []
-        repos_auto_search_list = ['fmt', 'zstd', 'cpptrace', 'libassert', 'spdlog', 'tracy']
+        repos_auto_search_list = ['magic_enum', 'nanobind', 'stb', 'bitsery']
         repos_version = []
         base_install_dir = Path('_csw/install')
         install_subdir = Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}')

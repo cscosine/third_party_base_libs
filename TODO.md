@@ -163,6 +163,10 @@ cpptrace on the packages of this project instead of its `FetchContent` copies (o
   `cpptrace-config-cmake.in`): the fork `libdwarf`, `CPPTRACE_USE_EXTERNAL_LIBDWARF=ON`, dependencies
   `libdwarf: {zstd}`, `cpptrace: {zstd, libdwarf}`. libassert: rebuilt, no change.
 
+PIC and the Debug postfix of the forks: set in each fork (decided 2026-11-25): its `csCMakeProjectSetup.json`
+(`CMAKE_POSITION_INDEPENDENT_CODE` ON, `CMAKE_DEBUG_POSTFIX` d: zstd, tracy) or its own options (fmt, spdlog), or a
+commit (cpptrace). csCMake projects get PIC from csCMake itself (its TODO.md).
+
 How, a group at a time on `feature/new-libs` (here and in the forks touched): the recipe lists only the group and
 what it depends on (the other libraries removed for the run, so CI is short), the forks at `main`; CI on demand
 (`gh workflow run third_party_base_libs.yml --ref feature/new-libs`); green: the next group. At the end every library
@@ -170,9 +174,9 @@ back in the recipe, the new forks by tag, one commit here; `version` 0.1.1.
 
 | Group | Libraries (+ for the run) | Status |
 |---|---|---|
-| N1 | nlohmann_json, tomlplusplus, CLI11 (+ Catch2), concurrentqueue, unordered_dense, nanobench | todo |
-| N2 | zstd, then cpptrace on it (+ libdwarf if needed; + libassert), spdlog (+ fmt), tracy | todo |
-| N3 | nanobind, stb, bitsery | todo |
+| N1 | nlohmann_json, tomlplusplus, CLI11 (+ Catch2), concurrentqueue, unordered_dense, nanobench | green |
+| N2 | zstd, then cpptrace on it (libdwarf not needed; + libassert), spdlog (+ fmt), tracy | green |
+| N3 | nanobind, stb, bitsery; magic_enum 0.10.0 (fork branch `sync/v0.10.0`) | CI |
 | N4 | the full recipe, every configuration; release; the consumers (csfoundation first) | todo |
 | N5 | the Tracy viewer and `tracy-capture` (optional, see below) | later |
 
