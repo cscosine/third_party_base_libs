@@ -61,10 +61,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "bitsery": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
-    # TEMPORARY (feature/new-libs, TODO.md 2.1): only the group under test and what it needs, so CI is short
-    new_libs_group = {"nanobind", "stb", "bitsery", "magic_enum"}  # group N3, and magic_enum 0.10.0
-    repos = {name: config for name, config in repos.items() if name in new_libs_group}
-
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
     # (arm64, Apple Clang; Ninja Multi-Config and Xcode)
     additional_matrix = (
@@ -78,8 +74,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "spdlog": {"fmt"},
         "CLI11": {"Catch2"},
     }
-    # TEMPORARY (feature/new-libs): the dependencies of the group only
-    dependencies = {name: deps for name, deps in dependencies.items() if name in repos}
 
     o = create_default_orchestrator_and_default_checkout_build_upload(
         name="third_party_base_libs",
