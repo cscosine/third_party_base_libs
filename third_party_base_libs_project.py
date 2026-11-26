@@ -37,26 +37,34 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "eigen3": RepoRefBuildPublishConfig("v5.0.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "fmt": RepoRefBuildPublishConfig("v12.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "fmt-eigen": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "zstd": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
-        "cpptrace": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
-        "magic_enum": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "zstd": RepoRefBuildPublishConfig("v1.6.0-cs.1", BuildConfig.DEBUG_RELEASE),
+        "cpptrace": RepoRefBuildPublishConfig("v1.0.4-cs.3", BuildConfig.DEBUG_RELEASE),
+        "magic_enum": RepoRefBuildPublishConfig(
+            "v0.10.0-cs.1", BuildConfig.DEBUG_RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
         "libassert": RepoRefBuildPublishConfig("v2.2.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "tclap": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "Catch2": RepoRefBuildPublishConfig("v3.16.1-cs.2", BuildConfig.DEBUG_RELEASE),
         "NamedType": RepoRefBuildPublishConfig("v1.1.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-optional": RepoRefBuildPublishConfig("v1.1.0-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
         "tl-expected": RepoRefBuildPublishConfig("v1.3.1-cs.2", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "nlohmann_json": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "tomlplusplus": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "CLI11": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "concurrentqueue": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "unordered_dense": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "nanobench": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "spdlog": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
-        "tracy": RepoRefBuildPublishConfig("main", BuildConfig.DEBUG_RELEASE),
-        "nanobind": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "stb": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
-        "bitsery": RepoRefBuildPublishConfig("main", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "nlohmann_json": RepoRefBuildPublishConfig(
+            "v3.12.0-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
+        "tomlplusplus": RepoRefBuildPublishConfig("v3.5.1-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "CLI11": RepoRefBuildPublishConfig("v2.7.2-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "concurrentqueue": RepoRefBuildPublishConfig(
+            "v1.0.5-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
+        "unordered_dense": RepoRefBuildPublishConfig(
+            "v5.3.3-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY
+        ),
+        "nanobench": RepoRefBuildPublishConfig("v4.6.0-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "spdlog": RepoRefBuildPublishConfig("v1.17.0-cs.1", BuildConfig.DEBUG_RELEASE),
+        "tracy": RepoRefBuildPublishConfig("v0.15.0-cs.1", BuildConfig.DEBUG_RELEASE),
+        "nanobind": RepoRefBuildPublishConfig("v3.1.0-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "stb": RepoRefBuildPublishConfig("v1.0.0", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
+        "bitsery": RepoRefBuildPublishConfig("v5.2.5-cs.1", BuildConfig.RELEASE, PublishPackageMode.HEADERS_ONLY),
     }
 
     # on top of the default matrix (Ubuntu 22.04 / 24.04, Windows 10): Ubuntu 26.04 (as 22.04 / 24.04) and macOS
@@ -77,7 +85,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         name="third_party_base_libs",
         # staggered weekly run (UTC), one project at a time in the build-train order (no shared runners)
         schedule=Cron.weekly(DayOfWeek.MON, hour=0, minute=15),
-        version="0.1.0",
+        version="0.1.1",
         base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
         repo_ref_build_publish_config_dict=repos,

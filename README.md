@@ -103,7 +103,7 @@ The core build recipe is defined in [`third_party_base_libs_project.py`](third_p
 
 ### Version Alignment
 
-The project version (`0.1.0`) is defined both in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`create_default_orchestrator(version=...)`) and in [`pyproject.toml`](pyproject.toml) — keep the two aligned when bumping the version.
+The project version (`0.1.1`) is defined both in [`third_party_base_libs_project.py`](third_party_base_libs_project.py) (`create_default_orchestrator(version=...)`) and in [`pyproject.toml`](pyproject.toml) — keep the two aligned when bumping the version.
 
 ### Execution Phases
 
